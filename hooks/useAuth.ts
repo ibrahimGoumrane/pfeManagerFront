@@ -47,6 +47,7 @@ export const useAuth = () => {
     localStorage.setItem("authToken", user.token);
     return user.user;
   };
+
   const signup = async (user: signUp): Promise<User> => {
     const newUser = await register(user);
     setIsAuthenticated(true);

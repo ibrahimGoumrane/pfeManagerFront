@@ -119,4 +119,22 @@
   body {
     @apply bg-background text-foreground;
   }
+  :root {
+    --pfebrand: 215 75% 33%; /* This is #195393 in HSL format */
+  }
 }
+
+@layer utilities {
+  .bg-pfebrand {
+    background-color: hsl(var(--pfebrand));
+  }
+  
+  .hover\:bg-pfebrand\/90:hover {
+    background-color: hsl(var(--pfebrand) / 0.9);
+  }
+  
+  .text-pfebrand {
+    color: hsl(var(--pfebrand));
+  }
+}
+

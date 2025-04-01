@@ -13,6 +13,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { searchReports } from "@/network/report";
+import { SearchParams } from "@/type/SearchParams";
 export default function SearchPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -20,8 +21,24 @@ export default function SearchPage() {
   const reportsPerPage = 6;
 
   // Filter reports based on search criteria
-  const handleSearch = (searchParams: any) => {
-    //TODO: Implement search logic
+  const handleSearch = async (searchParams: SearchParams) => {
+    try {
+      // Reset to first page when performing a new search
+      setCurrentPage(1);
+
+      // Convert the searchParams object to match the API requirements
+      // Use keywords as the main query parameter
+      const response = await searchReports(
+        searchParams.keywords || "",
+        searchParams.page || 1,
+        searchParams.tags || []
+      );
+
+      setReports(response.reports);
+    } catch (error) {
+      console.error("Error searching reports:", error);
+      setReports([]);
+    }
   };
 
   // Toggle favorite status

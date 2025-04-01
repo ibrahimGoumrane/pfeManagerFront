@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +22,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { SearchParams } from "@/type/SearchParams";
 
 const sectors = [
   "Education",
@@ -66,7 +66,7 @@ const availableTags = [
 export function SearchForm({
   onSearch,
 }: {
-  onSearch: (searchParams: any) => void;
+  onSearch: (searchParams: SearchParams) => void;
 }) {
   const [keywords, setKeywords] = useState("");
   const [sector, setSector] = useState("");
@@ -77,13 +77,16 @@ export function SearchForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch({
+
+    const searchParams: SearchParams = {
       keywords,
-      sector,
-      tags: selectedTags,
+      sector: sector === "all" ? undefined : sector,
+      tags: selectedTags.length > 0 ? selectedTags : undefined,
       fromDate: fromDate ? format(fromDate, "yyyy-MM-dd") : null,
       toDate: toDate ? format(toDate, "yyyy-MM-dd") : null,
-    });
+    };
+
+    onSearch(searchParams);
   };
 
   const handleReset = () => {

@@ -39,7 +39,7 @@ export const searchReports = async (
       reports: Report[];
       currentPage: number;
       hasMoreReports: boolean;
-    }>(`/reports/search?${queryParams.toString()}`, {
+    }>(`/search?${queryParams.toString()}`, {
       method: "GET",
     });
 

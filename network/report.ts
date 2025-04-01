@@ -8,12 +8,32 @@ export const fetchReports = async (): Promise<Report[]> => {
   })) as Report[];
 };
 
-// Search for reports
-export const searchReports = async (query: string): Promise<Report[]> => {
-  return (await fetchData<Report[]>(`/reports/search?query=${query}`, {
-    method: "GET",
-  })) as Report[];
+// Search for reports 
+export const searchReports = async (
+  query: string = "",
+  page = 1,
+  tags: string[] = []
+): Promise<{ reports: Report[]; currentPage: number; hasMoreReports: boolean }> => {
+  try {
+    const response = await fetchData<{
+      reports: Report[];
+      currentPage: number;
+      hasMoreReports: boolean;
+    }>(`/reports/search?query=${query}&currentPage=${page}`, {
+      method: "POST",
+      body: JSON.stringify({ tags }),
+    });
+    return response as {
+      reports: Report[];
+      currentPage: number;
+      hasMoreReports: boolean;
+    };
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    return { reports: [], currentPage: 1, hasMoreReports: false };
+  }
 };
+
 
 // Fetch a single report
 export const fetchReport = async (id: number): Promise<Report> => {

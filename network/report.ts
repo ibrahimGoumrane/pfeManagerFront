@@ -8,21 +8,41 @@ export const fetchReports = async (): Promise<Report[]> => {
   })) as Report[];
 };
 
-// Search for reports 
+// Search for reports
 export const searchReports = async (
   query: string = "",
   page = 1,
-  tags: string[] = []
-): Promise<{ reports: Report[]; currentPage: number; hasMoreReports: boolean }> => {
+  tags: string[] = [],
+  sector: string = "",
+  fromDate: string = "",
+  toDate: string = ""
+): Promise<{
+  reports: Report[];
+  currentPage: number;
+  hasMoreReports: boolean;
+}> => {
   try {
+    // Build URL with query parameters
+    const queryParams = new URLSearchParams();
+    queryParams.append("query", query);
+    queryParams.append("currentPage", page.toString());
+
+    // Add optional params only if they exist
+    if (sector) queryParams.append("sector", sector);
+    if (fromDate) queryParams.append("fromDate", fromDate);
+    if (toDate) queryParams.append("toDate", toDate);
+
+    // Add all tags as separate query parameters
+    tags.forEach((tag) => queryParams.append("tags", tag));
+
     const response = await fetchData<{
       reports: Report[];
       currentPage: number;
       hasMoreReports: boolean;
-    }>(`/reports/search?query=${query}&currentPage=${page}`, {
-      method: "POST",
-      body: JSON.stringify({ tags }),
+    }>(`/reports/search?${queryParams.toString()}`, {
+      method: "GET",
     });
+
     return response as {
       reports: Report[];
       currentPage: number;
@@ -33,7 +53,6 @@ export const searchReports = async (
     return { reports: [], currentPage: 1, hasMoreReports: false };
   }
 };
-
 
 // Fetch a single report
 export const fetchReport = async (id: number): Promise<Report> => {
@@ -70,9 +89,9 @@ export const validateReport = async (id: number): Promise<Report> => {
 
 // Download a report
 export const downloadReport = async (id: number): Promise<Blob> => {
-  return await fetchData<Blob>(`/reports/${id}/download`, {
+  return (await fetchData<Blob>(`/reports/${id}/download`, {
     method: "GET",
- }) as Blob;
+  })) as Blob;
 };
 
 // Delete a report

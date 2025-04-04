@@ -103,7 +103,7 @@ export function ReportActions({
             <Button
               variant="outline"
               size="sm"
-              className="text-amber-500 border-amber-200 hover:bg-amber-50 hover:text-amber-600"
+              className="text-amber-500 border-amber-200 hover:bg-amber-50 hover:text-amber-600 cursor-pointer min-w-[88px]"
             >
               <X className="mr-1 h-4 w-4" />
               <span className="sr-only sm:not-sr-only sm:inline-block">
@@ -135,7 +135,7 @@ export function ReportActions({
         <Button
           variant="outline"
           size="sm"
-          className="text-green-500 border-green-200 hover:bg-green-50 hover:text-green-600"
+          className="text-green-500 border-green-200 hover:bg-green-50 hover:text-green-600 min-w-[88px] cursor-pointer"
           onClick={handleValidate}
           disabled={isLoading}
         >

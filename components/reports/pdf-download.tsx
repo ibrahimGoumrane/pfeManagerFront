@@ -24,7 +24,7 @@ export function PdfDownload({ pdfUrl, title }: PdfDownloadProps) {
             variant="ghost"
             size="sm"
             onClick={handleDownload}
-            className="text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700"
+            className="text-pfebrand hover:bg-pfebrand/10 cursor-pointer hover:text-pfebrand/80"
           >
             <FileDown className="h-4 w-4" />
             <span className="sr-only">Download PDF</span>

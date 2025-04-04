@@ -76,7 +76,7 @@ export function DeleteReport({ report, onDelete }: DeleteReportProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="text-red-500 hover:bg-red-50 hover:text-red-600"
+          className="text-red-500 hover:bg-red-50 hover:text-red-600 cursor-pointer"
         >
           <Trash2 className="h-4 w-4" />
           <span className="sr-only">Delete</span>

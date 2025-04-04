@@ -229,7 +229,7 @@ export function ReportsTable() {
                       <PdfDownload pdfUrl={report.pdfUrl} title={report.title} />
                     </TableCell>
                     <TableCell>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 justify-between">
                         <ReportActions report={report} onValidationChange={handleValidationChange} />
                         <DeleteReport report={report} onDelete={handleDeleteReport} />
                       </div>

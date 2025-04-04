@@ -20,7 +20,7 @@ export function ImagePreview({ imageUrl, title }: ImagePreviewProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center gap-1 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700"
+          className="flex items-center gap-1 text-pfebrand hover:bg-pfebrand/10 cursor-pointer hover:text-pfebrand/80"
         >
           <ImageIcon className="h-4 w-4" />
           <span className="sr-only md:not-sr-only md:inline-block">Preview</span>

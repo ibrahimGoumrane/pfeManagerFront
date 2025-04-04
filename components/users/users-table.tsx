@@ -110,22 +110,22 @@ export function UsersTable() {
 
   return (
     <Card className="shadow-md border-0">
-      <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5  rounded-t-lg">
-      <CardTitle className="text-pfebrand">All Users</CardTitle>
+      <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5 rounded-t-lg">
+        <CardTitle className="text-pfebrand">All Users</CardTitle>
         <CardDescription>Manage user accounts and their associated sectors</CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <div className="relative flex-grow">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search users by name, email, or sector..."
-              className="pl-8 border-indigo-100 focus-visible:ring-indigo-500"
+              className="pl-8 border-pfebrand/20 focus-visible:ring-pfebrand/30"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2 border-indigo-200">
+              <Button variant="outline" className="flex items-center gap-2 border-pfebrand/20 text-pfebrand">
                 <Filter className="h-4 w-4" />
                 Filter
               </Button>
@@ -136,25 +136,25 @@ export function UsersTable() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("all")}
-                  className={filterRole === "all" ? "bg-indigo-50" : ""}
+                  className={filterRole === "all" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   All Roles
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("admin")}
-                  className={filterRole === "admin" ? "bg-indigo-50" : ""}
+                  className={filterRole === "admin" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   Admin
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("manager")}
-                  className={filterRole === "manager" ? "bg-indigo-50" : ""}
+                  className={filterRole === "manager" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   Manager
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("user")}
-                  className={filterRole === "user" ? "bg-indigo-50" : ""}
+                  className={filterRole === "user" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   User
                 </DropdownMenuItem>
@@ -165,7 +165,7 @@ export function UsersTable() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => setFilterSector("all")}
-                  className={filterSector === "all" ? "bg-indigo-50" : ""}
+                  className={filterSector === "all" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   All Sectors
                 </DropdownMenuItem>
@@ -173,7 +173,7 @@ export function UsersTable() {
                   <DropdownMenuItem
                     key={sector.id}
                     onClick={() => setFilterSector(sector.id)}
-                    className={filterSector === sector.id ? "bg-indigo-50" : ""}
+                    className={filterSector === sector.id ? "bg-pfebrand/10 text-pfebrand" : ""}
                   >
                     {sector.name}
                   </DropdownMenuItem>

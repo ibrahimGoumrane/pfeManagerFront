@@ -214,7 +214,7 @@ export function ReportsTable() {
             <TableBody>
               {filteredReports.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     No reports found
                   </TableCell>
                 </TableRow>
@@ -248,9 +248,7 @@ export function ReportsTable() {
                         {report.userName}
                       </Link>
                     </TableCell>
-                    <TableCell>
-                        {report.sectorName}
-                      </TableCell>
+                    <TableCell>{report.sectorName}</TableCell>
                     <TableCell>
                       <PdfDownload pdfUrl={report.pdfUrl} title={report.title} />
                     </TableCell>

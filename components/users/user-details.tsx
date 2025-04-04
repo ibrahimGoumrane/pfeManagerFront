@@ -91,7 +91,7 @@ export function UserDetails({ user, sectors, onUpdate }: UserDetailsProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700">
+        <Button variant="ghost" size="sm" className="text-pfebrand hover:bg-pfebrand/10 hover:text-pfebrand/80 cursor-pointer"> 
           <UserCog className="h-4 w-4 mr-1" />
           <span className="sr-only sm:not-sr-only sm:inline-block">Manage</span>
         </Button>
@@ -130,8 +130,8 @@ export function UserDetails({ user, sectors, onUpdate }: UserDetailsProps) {
               <Label htmlFor="sector" className="text-right">
                 Sector
               </Label>
-              <Select value={formData.sectorId} onValueChange={(value) => handleChange("sectorId", value)}>
-                <SelectTrigger className="col-span-3">
+              <Select value={formData.sectorId}  onValueChange={(value) => handleChange("sectorId", value)}>
+                <SelectTrigger className="col-span-3 w-full">
                   <SelectValue placeholder="Select a sector" />
                 </SelectTrigger>
                 <SelectContent>
@@ -169,7 +169,7 @@ export function UserDetails({ user, sectors, onUpdate }: UserDetailsProps) {
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700" disabled={isLoading}>
+            <Button type="submit" className="bg-pfebrand hover:bg-pfebrand/80" disabled={isLoading}>
               {isLoading ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>

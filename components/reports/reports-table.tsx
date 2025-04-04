@@ -169,6 +169,29 @@ export function ReportsTable() {
                   Not Validated Only
                 </DropdownMenuItem>
               </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Filter by Sector</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => setFilterStatus("all")}
+                  className={filterStatus === "all" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                >
+                  All Reports
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setFilterStatus("validated")}
+                  className={filterStatus === "validated" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                >
+                  Validated Only
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setFilterStatus("not-validated")}
+                  className={filterStatus === "not-validated" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                >
+                  Not Validated Only
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -182,7 +205,8 @@ export function ReportsTable() {
                 <TableHead>Description</TableHead>
                 <TableHead>Preview</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>User</TableHead>
+                <TableHead>Student</TableHead>
+                <TableHead>Sector</TableHead>
                 <TableHead>PDF</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -222,9 +246,11 @@ export function ReportsTable() {
                       >
                         <UserRound className="h-3 w-3" />
                         {report.userName}
-                        <span className="text-xs text-slate-500">({report.sectorName})</span>
                       </Link>
                     </TableCell>
+                    <TableCell>
+                        {report.sectorName}
+                      </TableCell>
                     <TableCell>
                       <PdfDownload pdfUrl={report.pdfUrl} title={report.title} />
                     </TableCell>

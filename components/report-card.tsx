@@ -4,7 +4,7 @@ import { Heart } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import type { Report } from "@/components/search-page"
+import type { Report } from "@/components/reports/delete-report"
 
 interface ReportCardProps {
   report: Report
@@ -17,7 +17,7 @@ export function ReportCard({ report, isFavorite, onToggleFavorite }: ReportCardP
     <div className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow">
       <div className="md:w-1/4 flex-shrink-0">
         <Image
-          src={report.imageUrl || "/placeholder.svg"}
+          src={report.previewUrl || "/placeholder.svg"}
           alt={`Preview for ${report.title}`}
           width={300}
           height={200}
@@ -40,13 +40,13 @@ export function ReportCard({ report, isFavorite, onToggleFavorite }: ReportCardP
         </div>
 
         <div className="text-sm text-muted-foreground mt-1">
-          {report.sector} • {new Date(report.date).toLocaleDateString()}
+          {report.sectorName} 
         </div>
 
-        <p className="mt-2 line-clamp-3">{report.abstract}</p>
+        <p className="mt-2 line-clamp-3">{report.description}</p>
 
         <div className="mt-auto pt-3 flex flex-wrap gap-2">
-          {report.tags.map((tag) => (
+          {report.tags?.map((tag) => (
             <Badge key={tag} variant="secondary">
               {tag}
             </Badge>

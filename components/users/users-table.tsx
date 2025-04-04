@@ -110,8 +110,8 @@ export function UsersTable() {
 
   return (
     <Card className="shadow-md border-0">
-      <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-t-lg">
-        <CardTitle className="text-indigo-800">All Users</CardTitle>
+      <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5  rounded-t-lg">
+      <CardTitle className="text-pfebrand">All Users</CardTitle>
         <CardDescription>Manage user accounts and their associated sectors</CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <div className="relative flex-grow">

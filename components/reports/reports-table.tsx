@@ -126,22 +126,22 @@ export function ReportsTable() {
 
   return (
     <Card className="shadow-md border-0">
-      <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-t-lg">
-        <CardTitle className="text-indigo-800">All Reports</CardTitle>
+      <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5  rounded-t-lg">
+        <CardTitle className="text-pfebrand">All Reports</CardTitle>
         <CardDescription>Manage and validate reports submitted by users</CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <div className="relative flex-grow">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search reports, users, or sectors..."
-              className="pl-8 border-indigo-100 focus-visible:ring-indigo-500"
+              className="pl-8 border-pfebrand/20 focus-visible:ring-pfebrand/30"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2 border-indigo-200">
+              <Button variant="outline" className="flex items-center gap-2 border-pfebrand/20 text-pfebrand">
                 <Filter className="h-4 w-4" />
                 Filter
               </Button>
@@ -152,19 +152,19 @@ export function ReportsTable() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => setFilterStatus("all")}
-                  className={filterStatus === "all" ? "bg-indigo-50" : ""}
+                  className={filterStatus === "all" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   All Reports
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterStatus("validated")}
-                  className={filterStatus === "validated" ? "bg-indigo-50" : ""}
+                  className={filterStatus === "validated" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   Validated Only
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterStatus("not-validated")}
-                  className={filterStatus === "not-validated" ? "bg-indigo-50" : ""}
+                  className={filterStatus === "not-validated" ? "bg-pfebrand/10 text-pfebrand" : ""}
                 >
                   Not Validated Only
                 </DropdownMenuItem>
@@ -218,7 +218,7 @@ export function ReportsTable() {
                     <TableCell>
                       <Link
                         href={`/admin/users?id=${report.userId}`}
-                        className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
+                        className="flex items-center gap-1 text-sm text-pfebrand hover:text-pfebrand/80 hover:underline"
                       >
                         <UserRound className="h-3 w-3" />
                         {report.userName}

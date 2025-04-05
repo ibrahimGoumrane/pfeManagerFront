@@ -15,10 +15,7 @@ export default function SearchReportsPage() {
   // Parse search params from URL
   const initialParams: SearchParams = {
     keywords: searchParams.get("query") || "",
-    sector: searchParams.get("sector") || "",
     tags: searchParams.getAll("tags") || [],
-    fromDate: searchParams.get("fromDate") || null,
-    toDate: searchParams.get("toDate") || null,
     page: Number.parseInt(searchParams.get("currentPage") || "1"),
   };
 
@@ -55,10 +52,7 @@ export default function SearchReportsPage() {
       const { reports: newReports, hasMoreReports } = await searchReports(
         params.keywords || "",
         params.page || 1,
-        params.tags || [],
-        params.sector || "",
-        params.fromDate || "",
-        params.toDate || ""
+        params.tags || []
       );
       console.log(newReports);
       console.log(hasMoreReports);
@@ -87,9 +81,6 @@ export default function SearchReportsPage() {
     // Update URL with search params
     const queryParams = new URLSearchParams();
     if (newParams.keywords) queryParams.set("query", newParams.keywords);
-    if (newParams.sector) queryParams.set("sector", newParams.sector);
-    if (newParams.fromDate) queryParams.set("fromDate", newParams.fromDate);
-    if (newParams.toDate) queryParams.set("toDate", newParams.toDate);
     newParams.tags?.forEach((tag) => queryParams.append("tags", tag));
 
     router.push(`/reports/search?${queryParams.toString()}`);

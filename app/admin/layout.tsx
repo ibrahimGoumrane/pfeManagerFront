@@ -14,8 +14,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b  bg- text-white">
+    <div className="flex min-h-screen flex-col ">
+      <header className="sticky top-0 z-50 w-full border-b  bg-white text-white">
         <div className="container flex h-16 items-center px-4 sm:px-8">
           <Link
             href="/admin"

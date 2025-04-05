@@ -16,6 +16,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner"
 import { Report } from "@/type/report";
+import { deleteReport as deleteReportApi } from "@/network/report";
 
 interface DeleteReportProps {
   report: Report;
@@ -28,10 +29,8 @@ export function DeleteReport({ report, onDelete }: DeleteReportProps) {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      // In a real app, this would call the server action
-      // await deleteReport(report.id)
-
-      // For demo purposes, we'll just use the callback
+      // Call the API to delete the report
+      await deleteReportApi(report.id);
       onDelete(report.id);
 
       toast.success('Report deleted' , {

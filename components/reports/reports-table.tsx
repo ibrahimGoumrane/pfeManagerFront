@@ -94,28 +94,8 @@ export function ReportsTable() {
   };
 
   const handleDeleteReport = async (id: number) => {
-    try {
-      // Call API to delete the report
-      const response = await fetch(`/api/reports/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
       // Update the local state if API call succeeds
       setReports(reports.filter((report) => report.id !== +id));
-      
-      toast.success("Report deleted", {
-        description: "The report has been successfully deleted",
-      });
-    } catch (error) {
-      console.error("Error deleting report:", error);
-      toast.error("Failed to delete report", {
-        description: "Please try again later",
-      });
-    }
   };
 
   return (

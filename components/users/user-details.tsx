@@ -163,14 +163,6 @@ export function UserDetails({ user, sectors, onUpdate, handleSelectUser }: UserD
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem 
-                    value="manager" 
-                    id="manager"
-                    className="text-pfebrand border-pfebrand/30 focus:ring-pfebrand/20 data-[state=checked]:bg-pfebrand data-[state=checked]:text-white" 
-                  />
-                  <Label htmlFor="manager" className="text-pfebrand/70">Manager</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem 
                     value="user" 
                     id="user"
                     className="text-pfebrand border-pfebrand/30 focus:ring-pfebrand/20 data-[state=checked]:bg-pfebrand data-[state=checked]:text-white" 

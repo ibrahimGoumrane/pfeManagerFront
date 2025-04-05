@@ -38,13 +38,12 @@ export function UserDetails({ user, sectors, onUpdate, handleSelectUser }: UserD
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
-      ...(field === "sectorId" && {
-        sectorName: sectors.find((s) => s.id === +value)?.name || "",
+      [field]: field === "sector_id" ? +value : value,
+      ...(field === "sector_id" && {
+        sector: sectors.find((s) => s.id === +value),
       }),
     }))
   }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -128,7 +127,7 @@ export function UserDetails({ user, sectors, onUpdate, handleSelectUser }: UserD
               </Label>
               <Select 
                 value={(formData.sector.id).toString()} 
-                onValueChange={(value) => handleChange("sectorId", value)}
+                onValueChange={(value) => handleChange("sector_id", value)}
               >
                 <SelectTrigger className="col-span-3 w-full border-pfebrand/20 focus:ring-pfebrand/30 text-pfebrand/80">
                   <SelectValue placeholder="Select a sector" />

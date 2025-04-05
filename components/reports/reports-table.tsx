@@ -125,10 +125,10 @@ export function ReportsTable() {
         </CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <div className="relative flex-grow">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-pfebrand" />
             <Input
               placeholder="Search reports, users, or sectors..."
-              className="pl-8 border-indigo-600/20 focus-visible:ring-indigo-600/30"
+              className="pl-8 border-pfebrand/30 focus-visible:ring-pfebrand/30"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

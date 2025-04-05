@@ -266,7 +266,7 @@ export function ReportsTable() {
                       </TableCell>
                       <TableCell>
                         <Link
-                          href={`/admin/users?id=${report.user.id}`}
+                          href={`/admin/users/${report.user.id}`}
                           className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
                         >
                           <UserRound className="h-3 w-3" />

@@ -1,13 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Search, Filter, FileText } from "lucide-react"
-import { UserDetails } from "./user-details"
+import { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, Filter, FileText } from "lucide-react";
+import { UserDetails } from "./user-details";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +29,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 // Mock data - replace with actual data fetching
 const mockUsers = [
   {
-    id: "user1",
+    id: 1,
     name: "John Doe",
     email: "john@example.com",
     role: "admin",
@@ -31,7 +44,7 @@ const mockUsers = [
     reportsCount: 2,
   },
   {
-    id: "user2",
+    id: 2,
     name: "Jane Smith",
     email: "jane@example.com",
     role: "user",
@@ -41,7 +54,7 @@ const mockUsers = [
     reportsCount: 1,
   },
   {
-    id: "user3",
+    id: 3,
     name: "Robert Johnson",
     email: "robert@example.com",
     role: "user",
@@ -51,7 +64,7 @@ const mockUsers = [
     reportsCount: 1,
   },
   {
-    id: "user4",
+    id: 4,
     name: "Sarah Williams",
     email: "sarah@example.com",
     role: "manager",
@@ -61,7 +74,7 @@ const mockUsers = [
     reportsCount: 1,
   },
   {
-    id: "user5",
+    id: 5,
     name: "Michael Brown",
     email: "michael@example.com",
     role: "user",
@@ -70,7 +83,7 @@ const mockUsers = [
     sectorName: "Finance",
     reportsCount: 0,
   },
-]
+];
 
 // Mock sectors data
 const mockSectors = [
@@ -80,39 +93,53 @@ const mockSectors = [
   { id: "sector4", name: "Product" },
   { id: "sector5", name: "Marketing" },
   { id: "sector6", name: "Human Resources" },
-]
+];
 
-export function UsersTable() {
-  const [users, setUsers] = useState(mockUsers)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterRole, setFilterRole] = useState<string>("all")
-  const [filterSector, setFilterSector] = useState<string>("all")
+export interface UsersTableProps {
+  userId: string | undefined;
+}
+
+export function UsersTable({ userId }: UsersTableProps) {
+  const [users, setUsers] = useState(mockUsers);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState<number | undefined>(userId ? +userId : undefined);
+  const [filterRole, setFilterRole] = useState<string>("all");
+  const [filterSector, setFilterSector] = useState<string>("all");
 
   const filteredUsers = users
     .filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.sectorName.toLowerCase().includes(searchTerm.toLowerCase()),
+        user.sectorName.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((user) => {
-      if (filterRole === "all") return true
-      return user.role === filterRole
+      if (filterRole === "all") return true;
+      return user.role === filterRole;
     })
     .filter((user) => {
-      if (filterSector === "all") return true
-      return user.sectorId === filterSector
-    })
+      if (filterSector === "all") return true;
+      return user.sectorId === filterSector;
+    });
 
   const handleUpdateUser = (updatedUser: any) => {
-    setUsers(users.map((user) => (user.id === updatedUser.id ? { ...user, ...updatedUser } : user)))
-  }
+    setUsers(
+      users.map((user) =>
+        user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+      )
+    );
+  };
+  const handleSelectUser = (userId: number) => {
+    setSelectedUser(userId);
+  };
 
   return (
     <Card className="shadow-md border-0">
       <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5 rounded-t-lg">
         <CardTitle className="text-pfebrand">All Users</CardTitle>
-        <CardDescription>Manage user accounts and their associated sectors</CardDescription>
+        <CardDescription>
+          Manage user accounts and their associated sectors
+        </CardDescription>
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <div className="relative flex-grow">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -125,7 +152,10 @@ export function UsersTable() {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2 border-pfebrand/20 text-pfebrand">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 border-pfebrand/20 text-pfebrand"
+              >
                 <Filter className="h-4 w-4" />
                 Filter
               </Button>
@@ -136,25 +166,35 @@ export function UsersTable() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("all")}
-                  className={filterRole === "all" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                  className={
+                    filterRole === "all" ? "bg-pfebrand/10 text-pfebrand" : ""
+                  }
                 >
                   All Roles
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("admin")}
-                  className={filterRole === "admin" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                  className={
+                    filterRole === "admin" ? "bg-pfebrand/10 text-pfebrand" : ""
+                  }
                 >
                   Admin
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("manager")}
-                  className={filterRole === "manager" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                  className={
+                    filterRole === "manager"
+                      ? "bg-pfebrand/10 text-pfebrand"
+                      : ""
+                  }
                 >
                   Manager
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("user")}
-                  className={filterRole === "user" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                  className={
+                    filterRole === "user" ? "bg-pfebrand/10 text-pfebrand" : ""
+                  }
                 >
                   User
                 </DropdownMenuItem>
@@ -165,7 +205,9 @@ export function UsersTable() {
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => setFilterSector("all")}
-                  className={filterSector === "all" ? "bg-pfebrand/10 text-pfebrand" : ""}
+                  className={
+                    filterSector === "all" ? "bg-pfebrand/10 text-pfebrand" : ""
+                  }
                 >
                   All Sectors
                 </DropdownMenuItem>
@@ -173,7 +215,11 @@ export function UsersTable() {
                   <DropdownMenuItem
                     key={sector.id}
                     onClick={() => setFilterSector(sector.id)}
-                    className={filterSector === sector.id ? "bg-pfebrand/10 text-pfebrand" : ""}
+                    className={
+                      filterSector === sector.id
+                        ? "bg-pfebrand/10 text-pfebrand"
+                        : ""
+                    }
                   >
                     {sector.name}
                   </DropdownMenuItem>
@@ -200,14 +246,29 @@ export function UsersTable() {
             <TableBody>
               {filteredUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell
+                    colSpan={7}
+                    className="text-center py-8 text-muted-foreground"
+                  >
                     No users found
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-slate-50">
-                    <TableCell className="font-medium">{user.name}</TableCell>
+                  <TableRow 
+                    key={user.id} 
+                    className={`border-l-4 border-transparent hover:bg-pfebrand/10 hover:border-pfebrand hover:shadow-sm ${
+                      (selectedUser && user.id === +selectedUser )
+                        ? "bg-pfebrand/10 border-l-4 border-pfebrand shadow-sm" 
+                        : ""
+                    }`}
+                  >
+                    <TableCell className="font-medium">
+                      {(selectedUser && user.id === +selectedUser )
+                        ? <span className="text-pfebrand">{user.name}</span> 
+                        : user.name
+                      }
+                    </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
                       <RoleBadge role={user.role} />
@@ -215,11 +276,17 @@ export function UsersTable() {
                     <TableCell>{user.sectorName}</TableCell>
                     <TableCell>
                       {user.emailVerifiedAt ? (
-                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                        <Badge
+                          variant="outline"
+                          className="bg-green-50 text-green-700 border-green-200"
+                        >
                           Verified
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                        <Badge
+                          variant="outline"
+                          className="bg-amber-50 text-amber-700 border-amber-200"
+                        >
                           Pending
                         </Badge>
                       )}
@@ -231,7 +298,12 @@ export function UsersTable() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <UserDetails user={user} sectors={mockSectors} onUpdate={handleUpdateUser} />
+                      <UserDetails
+                        user={user}
+                        sectors={mockSectors}
+                        onUpdate={handleUpdateUser}
+                        handleSelectUser={handleSelectUser}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
@@ -241,17 +313,28 @@ export function UsersTable() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function RoleBadge({ role }: { role: string }) {
   switch (role) {
     case "admin":
-      return <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">Admin</Badge>
+      return (
+        <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+          Admin
+        </Badge>
+      );
     case "manager":
-      return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Manager</Badge>
+      return (
+        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+          Manager
+        </Badge>
+      );
     default:
-      return <Badge className="bg-slate-100 text-slate-800 hover:bg-slate-100">User</Badge>
+      return (
+        <Badge className="bg-slate-100 text-slate-800 hover:bg-slate-100">
+          User
+        </Badge>
+      );
   }
 }
-

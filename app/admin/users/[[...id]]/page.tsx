@@ -1,6 +1,16 @@
 import { UsersTable } from "@/components/users/users-table";
 
-export default function ReportsAdminPage() {
+interface UsersAdminPageProps {
+  params: Promise<{ id: string[] }>
+}
+
+export default async function UserAdminPage(
+  {
+  params
+  }: UsersAdminPageProps
+) {
+  const { id } = await params;
+  const userId = id?.[0];
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-[80vw] mx-auto px-4 sm:px-6 py-12">
@@ -17,7 +27,7 @@ export default function ReportsAdminPage() {
         {/* Elevated card for content */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-md">
           <div className="p-6">
-            <UsersTable />
+            <UsersTable userId={userId} />
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -25,7 +25,7 @@ interface Sector {
 }
 
 interface User {
-  id: string
+  id: number
   name: string
   email: string
   role: string
@@ -38,12 +38,14 @@ interface UserDetailsProps {
   user: User
   sectors: Sector[]
   onUpdate: (user: User) => void
+  handleSelectUser: (userId: number) => void
 }
 
-export function UserDetails({ user, sectors, onUpdate }: UserDetailsProps) {
+export function UserDetails({ user, sectors, onUpdate , handleSelectUser }: UserDetailsProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<User>({ ...user })
+
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -87,7 +89,11 @@ export function UserDetails({ user, sectors, onUpdate }: UserDetailsProps) {
       setIsLoading(false)
     }
   }
-
+  useEffect(() => {
+    if (isOpen) {
+      handleSelectUser(user.id)
+    }
+  }, [isOpen, user.id, handleSelectUser])
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

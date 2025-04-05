@@ -13,19 +13,20 @@ type AdminNavProps = React.HTMLAttributes<HTMLElement>
 
 export function AdminNav({ className, ...props }: AdminNavProps) {
   const pathname = usePathname()
-
+  // Extract the pathname first two parts of the URL
+  const pathParts = pathname.split("/").slice(0, 3).join("/")
   const navItems = [
     {
       name: "Reports",
       href: "/admin/reports",
       icon: FileText,
-      active: pathname === "/admin/reports",
+      active: pathParts === "/admin/reports",
     },
     {
       name: "Users",
       href: "/admin/users",
       icon: Users,
-      active: pathname === "/admin/users",
+      active: pathParts === "/admin/users",
     },
   ]
 

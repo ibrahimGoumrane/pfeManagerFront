@@ -248,7 +248,7 @@ export function ReportsTable({ reportId }: ReportsTableProps) {
                       key={report.id} 
                       className={`border-l-4 border-transparent transition-all hover:bg-pfebrand/30/50 hover:border-pfebg-pfebrand/300/30 ${
                         reportId && report.id === +reportId
-                          ? "bg-pfebrand/30 border-l-4 border-pfebg-pfebrand/300 shadow-sm" 
+                          ? "bg-pfebrand/10 border-l-4 border-pfebrand shadow-sm" 
                           : ""
                       }`}
                     >

@@ -16,6 +16,7 @@ import {
 import { Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { Report } from "@/type/report";
+import { validateReport as validateReportApi } from "@/network/report"
 
 interface ReportActionsProps {
   report: Report;
@@ -32,7 +33,7 @@ export function ReportActions({
     setIsLoading(true);
     try {
       // In a real app, this would call the server action
-      // await validateReport(report.id)
+      await validateReportApi(report.id, true);
 
       // For demo purposes, we'll just use the callback
       onValidationChange(report.id, true);
@@ -63,7 +64,7 @@ export function ReportActions({
     setIsLoading(true);
     try {
       // In a real app, this would call the server action
-      // await invalidateReport(report.id)
+      await validateReportApi(report.id, false);
 
       // For demo purposes, we'll just use the callback
       onValidationChange(report.id, false);

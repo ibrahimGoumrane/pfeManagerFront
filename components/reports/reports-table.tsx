@@ -85,36 +85,12 @@ export function ReportsTable() {
     });
 
   const handleValidationChange = async (id: number, validated: boolean) => {
-    try {
-      // Call API to update report validation status
-      const response = await fetch(`/api/reports/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ validated }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
       // Update the local state if API call succeeds
       setReports(
         reports.map((report) =>
           report.id === +id ? { ...report, validated } : report
         )
       );
-
-      toast.success(
-        validated ? "Report validated" : "Report validation removed"
-      );
-    } catch (error) {
-      console.error("Error updating report validation:", error);
-      toast.error("Failed to update report", {
-        description: "Please try again later",
-      });
-    }
   };
 
   const handleDeleteReport = async (id: number) => {
@@ -259,10 +235,12 @@ export function ReportsTable() {
                   filteredReports.map((report) => (
                     <TableRow key={report.id} className="hover:bg-slate-50">
                       <TableCell className="font-medium">
-                        {report.title}
+                        {report.title.slice(0, 30)}
+                        {report.title.length > 30 ? "..." : ""}
                       </TableCell>
                       <TableCell className="max-w-xs truncate">
                         {report.description}
+
                       </TableCell>
                       <TableCell>
                         <ImagePreview

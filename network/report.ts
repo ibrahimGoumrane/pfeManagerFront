@@ -81,9 +81,10 @@ export const updateReport = async (
 };
 
 // Validate a report
-export const validateReport = async (id: number): Promise<Report> => {
+export const validateReport = async (id: number , newStatus : boolean): Promise<Report> => {
   return (await fetchData<Report>(`/reports/${id}/validate`, {
     method: "PUT",
+    body: JSON.stringify({ validated: newStatus }),
   })) as Report;
 };
 

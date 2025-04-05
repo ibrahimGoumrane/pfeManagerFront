@@ -1,9 +1,10 @@
+import { Sector } from "./sector";
 
 export type User = {
   id: number;
   name: string;
   email: string;
-  password: string;
+  sector:Sector;
   created_at: string;
   updatedAt: string;
   role: string;

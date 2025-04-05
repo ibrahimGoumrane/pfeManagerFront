@@ -47,12 +47,15 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
   const [tags, setTags] = useState<string[]>(initialParams.tags || []);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const [filteredTags, setFilteredTags] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchAvailableTags = async () => {
       try {
         const response = await fetchTags();
-        setAvailableTags(response.map((tag) => tag.name));
+        const tagNames = response.map((tag) => tag.name);
+        setAvailableTags(tagNames);
+        setFilteredTags(tagNames);
       } catch (error) {
         console.error("Error fetching tags:", error);
       }
@@ -60,6 +63,18 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
 
     fetchAvailableTags();
   }, []);
+
+  // Filter available tags when tagInput changes
+  useEffect(() => {
+    if (tagInput.trim() === "") {
+      setFilteredTags(availableTags);
+    } else {
+      const filtered = availableTags.filter((tag) =>
+        tag.toLowerCase().includes(tagInput.toLowerCase())
+      );
+      setFilteredTags(filtered);
+    }
+  }, [tagInput, availableTags]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,7 +141,7 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && tagInput.trim()) {
                   e.preventDefault();
                   handleAddTag(tagInput);
                 }
@@ -136,12 +151,13 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
               type="button"
               variant="outline"
               onClick={() => handleAddTag(tagInput)}
+              disabled={!tagInput.trim()}
             >
               Add
             </Button>
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
-            {availableTags
+            {filteredTags
               .filter((tag) => !tags.includes(tag))
               .map((tag) => (
                 <Badge

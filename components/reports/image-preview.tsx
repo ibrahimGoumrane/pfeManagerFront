@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { ImageIcon } from "lucide-react"
+import { imageAddress } from "@/config/main"
 
 interface ImagePreviewProps {
   imageUrl: string
@@ -32,7 +33,7 @@ export function ImagePreview({ imageUrl, title }: ImagePreviewProps) {
         </DialogHeader>
         <div className="flex justify-center p-4">
           <div className="relative overflow-hidden rounded-md border shadow-md">
-            <Image src={imageUrl || "/placeholder.svg"} alt={title} width={600} height={400} className="object-cover" />
+            <Image src={imageAddress + imageUrl || "/placeholder.svg"} alt={title} width={600} height={400} className="object-cover" />
           </div>
         </div>
       </DialogContent>

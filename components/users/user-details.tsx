@@ -19,20 +19,8 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { UserCog } from "lucide-react"
 import { toast } from "sonner"
-interface Sector {
-  id: string
-  name: string
-}
-
-interface User {
-  id: number
-  name: string
-  email: string
-  role: string
-  sectorId: string
-  sectorName: string
-  [key: string]: any
-}
+import { User } from "@/type/users"
+import { Sector } from "@/type/sector"
 
 interface UserDetailsProps {
   user: User
@@ -52,7 +40,7 @@ export function UserDetails({ user, sectors, onUpdate , handleSelectUser }: User
       ...prev,
       [field]: value,
       ...(field === "sectorId" && {
-        sectorName: sectors.find((s) => s.id === value)?.name || "",
+        sectorName: sectors.find((s) => s.id === +value)?.name || "",
       }),
     }))
   }
@@ -136,13 +124,13 @@ export function UserDetails({ user, sectors, onUpdate , handleSelectUser }: User
               <Label htmlFor="sector" className="text-right">
                 Sector
               </Label>
-              <Select value={formData.sectorId}  onValueChange={(value) => handleChange("sectorId", value)}>
+              <Select value={(formData.sector.id).toString()}  onValueChange={(value) => handleChange("sectorId", value)}>
                 <SelectTrigger className="col-span-3 w-full">
                   <SelectValue placeholder="Select a sector" />
                 </SelectTrigger>
                 <SelectContent>
                   {sectors.map((sector) => (
-                    <SelectItem key={sector.id} value={sector.id}>
+                    <SelectItem key={sector.id} value={(sector.id).toString()}>
                       {sector.name}
                     </SelectItem>
                   ))}

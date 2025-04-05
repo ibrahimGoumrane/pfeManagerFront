@@ -30,88 +30,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// Mock data - replace with actual data fetching
-const mockUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    role: "admin",
-    emailVerifiedAt: "2023-01-15T10:30:00Z",
-    sectorId: "sector1",
-    sectorName: "Finance",
-    reportsCount: 2,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "user",
-    emailVerifiedAt: "2023-02-20T14:20:00Z",
-    sectorId: "sector2",
-    sectorName: "IT Security",
-    reportsCount: 1,
-  },
-  {
-    id: 3,
-    name: "Robert Johnson",
-    email: "robert@example.com",
-    role: "user",
-    emailVerifiedAt: "2023-01-05T09:15:00Z",
-    sectorId: "sector3",
-    sectorName: "Legal",
-    reportsCount: 1,
-  },
-  {
-    id: 4,
-    name: "Sarah Williams",
-    email: "sarah@example.com",
-    role: "manager",
-    emailVerifiedAt: "2023-03-10T16:45:00Z",
-    sectorId: "sector4",
-    sectorName: "Product",
-    reportsCount: 1,
-  },
-  {
-    id: 5,
-    name: "Michael Brown",
-    email: "michael@example.com",
-    role: "user",
-    emailVerifiedAt: null,
-    sectorId: "sector1",
-    sectorName: "Finance",
-    reportsCount: 0,
-  },
-];
-
-// Mock sectors data
-const mockSectors = [
-  { id: "sector1", name: "Finance" },
-  { id: "sector2", name: "IT Security" },
-  { id: "sector3", name: "Legal" },
-  { id: "sector4", name: "Product" },
-  { id: "sector5", name: "Marketing" },
-  { id: "sector6", name: "Human Resources" },
-];
+import { User } from "@/type/users";
+import { fetchUsers } from "@/network/users";
+import { Sector } from "@/type/sector";
+import { fetchSectors } from "@/network/sector";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export interface UsersTableProps {
   userId: string | undefined;
 }
 
 export function UsersTable({ userId }: UsersTableProps) {
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  const [sectors, setSectors] = useState<Sector[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<number | undefined>(userId ? +userId : undefined);
   const [filterRole, setFilterRole] = useState<string>("all");
   const [filterSector, setFilterSector] = useState<string>("all");
+
 
   const filteredUsers = users
     .filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.sectorName.toLowerCase().includes(searchTerm.toLowerCase())
+        user.sector.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((user) => {
       if (filterRole === "all") return true;
@@ -119,7 +64,7 @@ export function UsersTable({ userId }: UsersTableProps) {
     })
     .filter((user) => {
       if (filterSector === "all") return true;
-      return user.sectorId === filterSector;
+      return user.sector.id === +filterSector;
     });
 
   const handleUpdateUser = (updatedUser: any) => {
@@ -132,6 +77,38 @@ export function UsersTable({ userId }: UsersTableProps) {
   const handleSelectUser = (userId: number) => {
     setSelectedUser(userId);
   };
+
+   // Fetch users and sectors data when component mounts
+   useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Fetch users data
+        const userData = await fetchUsers();
+        setUsers(userData);
+        
+        // Fetch sectors data
+        const sectorData = await fetchSectors();
+        setSectors(sectorData);
+        
+        // If a userId is provided, make sure it's selected
+        if (userId) {
+          setSelectedUser(+userId);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Failed to load data", {
+          description: "Using sample data instead. Please try again later.",
+        });
+      
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, [userId]); // Re-fetch if userId changes
 
   return (
     <Card className="shadow-md border-0">
@@ -211,12 +188,12 @@ export function UsersTable({ userId }: UsersTableProps) {
                 >
                   All Sectors
                 </DropdownMenuItem>
-                {mockSectors.map((sector) => (
+                {sectors.map((sector) => (
                   <DropdownMenuItem
                     key={sector.id}
-                    onClick={() => setFilterSector(sector.id)}
+                    onClick={() => setFilterSector(`${sector.id}`)}
                     className={
-                      filterSector === sector.id
+                      +filterSector === sector.id
                         ? "bg-pfebrand/10 text-pfebrand"
                         : ""
                     }
@@ -238,7 +215,6 @@ export function UsersTable({ userId }: UsersTableProps) {
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Sector</TableHead>
-                <TableHead>Verified</TableHead>
                 <TableHead>Reports</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -273,34 +249,17 @@ export function UsersTable({ userId }: UsersTableProps) {
                     <TableCell>
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell>{user.sectorName}</TableCell>
-                    <TableCell>
-                      {user.emailVerifiedAt ? (
-                        <Badge
-                          variant="outline"
-                          className="bg-green-50 text-green-700 border-green-200"
-                        >
-                          Verified
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="bg-amber-50 text-amber-700 border-amber-200"
-                        >
-                          Pending
-                        </Badge>
-                      )}
-                    </TableCell>
+                    <TableCell>{user.sector.name}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <FileText className="h-3 w-3 text-slate-400" />
-                        <span>{user.reportsCount}</span>
+                        <span>2</span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <UserDetails
                         user={user}
-                        sectors={mockSectors}
+                        sectors={sectors}
                         onUpdate={handleUpdateUser}
                         handleSelectUser={handleSelectUser}
                       />

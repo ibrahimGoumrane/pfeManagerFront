@@ -1,3 +1,4 @@
+import { Report } from "./report";
 import { Sector } from "./sector";
 
 export type User = {
@@ -5,6 +6,7 @@ export type User = {
   name: string;
   email: string;
   sector:Sector;
+  reports:Report;
   created_at: string;
   updatedAt: string;
   role: string;

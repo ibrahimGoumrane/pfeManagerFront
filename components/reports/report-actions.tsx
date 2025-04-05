@@ -15,17 +15,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Check, X } from "lucide-react";
 import { toast } from "sonner";
-
-interface Report {
-  id: string;
-  title: string;
-  validated: boolean;
-  [key: string]: unknown;
-}
+import { Report } from "@/type/report";
 
 interface ReportActionsProps {
   report: Report;
-  onValidationChange: (id: string, validated: boolean) => void;
+  onValidationChange: (id: number, validated: boolean) => void;
 }
 
 export function ReportActions({

@@ -15,26 +15,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner"
-
-export interface Report {
-  id: string;
-  title: string;
-  description: string;
-  previewUrl: string;
-  pdfUrl: string;
-  validated: boolean;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  sectorId: string;
-  sectorName: string;
-  createdAt: string;
-  tags?: string[];
-}
+import { Report } from "@/type/report";
 
 interface DeleteReportProps {
   report: Report;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
 }
 
 export function DeleteReport({ report, onDelete }: DeleteReportProps) {

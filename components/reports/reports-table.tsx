@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { fetchReports as fetchReportsApi  } from "@/network/report";
+import { fetchSectors as fetchSectorsApi  } from "@/network/sector";
 
 
 
@@ -46,7 +47,40 @@ export function ReportsTable() {
   const [filterStatus, setFilterStatus] = useState<
     "all" | "validated" | "not-validated"
   >("all");
+  const [filterSector, setFilterSector] = useState<string>("");
+  const [availableSectors, setAvailableSectors] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true);
+
+  const filteredReports = reports
+    .filter(
+      (report) =>
+        report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        report.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        report.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        report.user.sector.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((report) => {
+      if (filterStatus === "validated") return report.validated;
+      if (filterStatus === "not-validated") return !report.validated;
+      return true;
+    }).filter((report) => {
+      if (filterSector === "") return true;
+      return report.user.sector.name === filterSector;
+    });
+
+  const handleValidationChange = async (id: number, validated: boolean) => {
+      // Update the local state if API call succeeds
+      setReports(
+        reports.map((report) =>
+          report.id === +id ? { ...report, validated } : report
+        )
+      );
+  };
+
+  const handleDeleteReport = async (id: number) => {
+      // Update the local state if API call succeeds
+      setReports(reports.filter((report) => report.id !== +id));
+  };
 
   // Fetch reports from the server
   useEffect(() => {
@@ -70,38 +104,22 @@ export function ReportsTable() {
     fetchReports();
   }, []);
 
-  const filteredReports = reports
-    .filter(
-      (report) =>
-        report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        report.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        report.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        report.user.sector.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((report) => {
-      if (filterStatus === "validated") return report.validated;
-      if (filterStatus === "not-validated") return !report.validated;
-      return true;
-    });
-
-  const handleValidationChange = async (id: number, validated: boolean) => {
-      // Update the local state if API call succeeds
-      setReports(
-        reports.map((report) =>
-          report.id === +id ? { ...report, validated } : report
-        )
-      );
-  };
-
-  const handleDeleteReport = async (id: number) => {
-      // Update the local state if API call succeeds
-      setReports(reports.filter((report) => report.id !== +id));
-  };
+  useEffect(() => {
+    async function fetchSectors() {
+      try {
+        const sectors = await fetchSectorsApi();
+        setAvailableSectors(sectors.map((sector) => sector.name));
+      } catch (error) {
+        console.error("Error fetching sectors:", error);
+      }
+    }
+    fetchSectors();
+  } ,[])
 
   return (
     <Card className="shadow-md border-0">
       <CardHeader className="bg-gradient-to-r from-indigo-600/10 to-indigo-600/5 rounded-t-lg">
-        <CardTitle className="text-indigo-700">All Reports</CardTitle>
+        <CardTitle className="text-pfebrand/80">All Reports</CardTitle>
         <CardDescription>
           Manage and validate reports submitted by users
         </CardDescription>
@@ -119,7 +137,7 @@ export function ReportsTable() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 border-indigo-600/20 text-indigo-700"
+                className="flex items-center gap-2 border-indigo-600/20 text-pfebrand/80"
               >
                 <Filter className="h-4 w-4" />
                 Filter
@@ -132,7 +150,7 @@ export function ReportsTable() {
                 <DropdownMenuItem
                   onClick={() => setFilterStatus("all")}
                   className={
-                    filterStatus === "all" ? "bg-indigo-50 text-indigo-700" : ""
+                    filterStatus === "all" ? "bg-indigo-50 text-pfebrand/80" : ""
                   }
                 >
                   All Reports
@@ -141,7 +159,7 @@ export function ReportsTable() {
                   onClick={() => setFilterStatus("validated")}
                   className={
                     filterStatus === "validated"
-                      ? "bg-indigo-50 text-indigo-700"
+                      ? "bg-indigo-50 text-pfebrand/80"
                       : ""
                   }
                 >
@@ -151,7 +169,7 @@ export function ReportsTable() {
                   onClick={() => setFilterStatus("not-validated")}
                   className={
                     filterStatus === "not-validated"
-                      ? "bg-indigo-50 text-indigo-700"
+                      ? "bg-indigo-50 text-pfebrand/80"
                       : ""
                   }
                 >
@@ -162,20 +180,22 @@ export function ReportsTable() {
               <DropdownMenuLabel>Filter by Sector</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                {/* You would dynamically generate these based on available sectors */}
-                <DropdownMenuItem onClick={() => setSearchTerm("Finance")}>
-                  Finance
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSearchTerm("IT Security")}>
-                  IT Security
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSearchTerm("Legal")}>
-                  Legal
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSearchTerm("Product")}>
-                  Product
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+                  {
+                    availableSectors.map((sector) => (
+                      <DropdownMenuItem
+                        key={sector}
+                        onClick={() => setFilterSector(sector)}
+                        className={
+                          filterSector === sector
+                            ? "bg-indigo-50 text-pfebrand/80"
+                            : ""
+                        }
+                      >
+                        {sector}
+                      </DropdownMenuItem>
+                    ))
+                  }
+                  </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -185,7 +205,7 @@ export function ReportsTable() {
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-              <span className="ml-2 text-indigo-700">Loading reports...</span>
+              <span className="ml-2 text-pfebrand/80">Loading reports...</span>
             </div>
           ) : (
             <Table>

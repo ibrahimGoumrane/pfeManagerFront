@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,8 +21,9 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { X, CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import type { SearchParams } from "@/type/SearchParams";
+import { fetchTags } from "@/network/tag";
 
 // Sample sectors - replace with your actual data
 const sectors = [
@@ -36,18 +37,6 @@ const sectors = [
   "Other",
 ];
 
-// Sample tags - replace with your actual data
-const availableTags = [
-  "Annual",
-  "Quarterly",
-  "Financial",
-  "Research",
-  "Market Analysis",
-  "Sustainability",
-  "Innovation",
-  "Compliance",
-];
-
 interface SearchFormProps {
   initialParams: SearchParams;
   onSearch: (params: SearchParams) => void;
@@ -56,7 +45,21 @@ interface SearchFormProps {
 export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
   const [keywords, setKeywords] = useState(initialParams.keywords || "");
   const [tags, setTags] = useState<string[]>(initialParams.tags || []);
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+
+  useEffect(() => {
+    const fetchAvailableTags = async () => {
+      try {
+        const response = await fetchTags();
+        setAvailableTags(response.map((tag) => tag.name));
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    };
+
+    fetchAvailableTags();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

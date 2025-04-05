@@ -108,14 +108,11 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
             {tags.map((tag) => (
               <Badge
                 key={tag}
+                onClick={() => handleRemoveTag(tag)}
                 variant="secondary"
-                className="flex items-center gap-1"
+                className="flex items-center cursor-pointer gap-1"
               >
                 {tag}
-                <X
-                  className="h-3 w-3 cursor-pointer"
-                  onClick={() => handleRemoveTag(tag)}
-                />
               </Badge>
             ))}
           </div>

@@ -44,7 +44,6 @@ export interface UsersTableProps {
 export function UsersTable({ userId }: UsersTableProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [sectors, setSectors] = useState<Sector[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<number | undefined>(userId ? +userId : undefined);
   const [filterRole, setFilterRole] = useState<string>("all");
@@ -67,7 +66,7 @@ export function UsersTable({ userId }: UsersTableProps) {
       return user.sector.id === +filterSector;
     });
 
-  const handleUpdateUser = (updatedUser: any) => {
+  const handleUpdateUser = (updatedUser: User) => {
     setUsers(
       users.map((user) =>
         user.id === updatedUser.id ? { ...user, ...updatedUser } : user
@@ -81,7 +80,6 @@ export function UsersTable({ userId }: UsersTableProps) {
    // Fetch users and sectors data when component mounts
    useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
       
       try {
         // Fetch users data
@@ -102,8 +100,6 @@ export function UsersTable({ userId }: UsersTableProps) {
           description: "Using sample data instead. Please try again later.",
         });
       
-      } finally {
-        setIsLoading(false);
       }
     };
     

@@ -1,62 +1,45 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { FileDown, Loader2 } from "lucide-react"
-import { toast } from "sonner"
-import { fetchData } from "@/network/main"
-
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { FileDown, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { imageAddress } from "@/config/main";
 interface PdfDownloadProps {
-  pdfUrl: string
-  title: string
+  pdfUrl: string;
+  title: string;
 }
 
 export function PdfDownload({ pdfUrl, title }: PdfDownloadProps) {
-  const [isDownloading, setIsDownloading] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {
-    setIsDownloading(true)
-    
+    setIsDownloading(true);
+  
     try {
-      // Fetch the PDF file
-      const response = await fetchData<Response>(pdfUrl) as Response;
-      
-      if (!response.ok) {
-        throw new Error(`Failed to download: ${response.statusText}`)
-      }
-      
-      // Convert to blob
-      const blob = await response.blob()
-      
-      // Create a blob URL
-      const blobUrl = URL.createObjectURL(blob)
-      
-      // Create an anchor element and set properties
-      const link = document.createElement('a')
-      link.href = blobUrl
-      link.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf` // Sanitize filename
-      
-      // Append to the document, click and remove
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-      // Revoke the blob URL to free memory
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 100)
-      
-      toast.success("Download started", {
-        description: `${title} is being downloaded to your device.`
-      })
+      const fullUrl = imageAddress + pdfUrl;
+  
+      // Open the file in a new tab
+      window.open(fullUrl, "_blank");
+      toast.success("Opening and downloading PDF", {
+        description: `${title} opened in a new tab.`,
+      });
     } catch (error) {
-      console.error("Download error:", error)
+      console.error("Download error:", error);
       toast.error("Download failed", {
-        description: "There was a problem downloading the file. Please try again."
-      })
+        description:
+          "There was a problem downloading the file. Please try again.",
+      });
     } finally {
-      setIsDownloading(false)
+      setIsDownloading(false);
     }
-  }
+  };
 
   return (
     <TooltipProvider>
@@ -82,5 +65,5 @@ export function PdfDownload({ pdfUrl, title }: PdfDownloadProps) {
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
+  );
 }

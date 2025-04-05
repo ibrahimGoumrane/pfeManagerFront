@@ -1,6 +1,12 @@
-import { ReportsTable } from "@/components/reports/reports-table"
+import { ReportsTable } from "@/components/reports/reports-table";
+interface ReportsAdminPageProps {
+  params: Promise<{ id: string[] }>;
+}
 
-export default function ReportsAdminPage() {
+export default async function ReportsAdminPage({ params }: ReportsAdminPageProps) {
+  const { id } = await params;
+  const reportId = id?.[0];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-[80vw] mx-auto px-4 sm:px-6 py-12">
@@ -13,14 +19,14 @@ export default function ReportsAdminPage() {
             View, validate, and manage all submitted reports in one place
           </p>
         </div>
-        
+
         {/* Elevated card for content */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-md">
           <div className="p-6">
-            <ReportsTable />
+            <ReportsTable reportId={reportId} />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

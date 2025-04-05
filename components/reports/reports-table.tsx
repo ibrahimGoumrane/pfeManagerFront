@@ -39,9 +39,11 @@ import { toast } from "sonner";
 import { fetchReports as fetchReportsApi  } from "@/network/report";
 import { fetchSectors as fetchSectorsApi  } from "@/network/sector";
 
+interface ReportsTableProps {
+  reportId: string;
+}
 
-
-export function ReportsTable() {
+export function ReportsTable({ reportId }: ReportsTableProps) {
   const [reports, setReports] = useState<Report[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<
@@ -81,6 +83,7 @@ export function ReportsTable() {
       // Update the local state if API call succeeds
       setReports(reports.filter((report) => report.id !== +id));
   };
+  
 
   // Fetch reports from the server
   useEffect(() => {
@@ -114,11 +117,11 @@ export function ReportsTable() {
       }
     }
     fetchSectors();
-  } ,[])
+  }, []);
 
   return (
     <Card className="shadow-md border-0">
-      <CardHeader className="bg-gradient-to-r from-indigo-600/10 to-indigo-600/5 rounded-t-lg">
+      <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5 rounded-t-lg">
         <CardTitle className="text-pfebrand/80">All Reports</CardTitle>
         <CardDescription>
           Manage and validate reports submitted by users
@@ -137,7 +140,7 @@ export function ReportsTable() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 border-indigo-600/20 text-pfebrand/80"
+                className="flex items-center gap-2 border-pfebrand/30 text-pfebrand/80"
               >
                 <Filter className="h-4 w-4" />
                 Filter
@@ -150,7 +153,7 @@ export function ReportsTable() {
                 <DropdownMenuItem
                   onClick={() => setFilterStatus("all")}
                   className={
-                    filterStatus === "all" ? "bg-indigo-50 text-pfebrand/80" : ""
+                    filterStatus === "all" ? "bg-pfebrand/20 text-pfebrand/80" : ""
                   }
                 >
                   All Reports
@@ -159,7 +162,7 @@ export function ReportsTable() {
                   onClick={() => setFilterStatus("validated")}
                   className={
                     filterStatus === "validated"
-                      ? "bg-indigo-50 text-pfebrand/80"
+                      ? "bg-pfebrand/20 text-pfebrand/80"
                       : ""
                   }
                 >
@@ -169,7 +172,7 @@ export function ReportsTable() {
                   onClick={() => setFilterStatus("not-validated")}
                   className={
                     filterStatus === "not-validated"
-                      ? "bg-indigo-50 text-pfebrand/80"
+                      ? "bg-pfebrand/30 text-pfebrand/80"
                       : ""
                   }
                 >
@@ -180,22 +183,30 @@ export function ReportsTable() {
               <DropdownMenuLabel>Filter by Sector</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                  {
-                    availableSectors.map((sector) => (
-                      <DropdownMenuItem
-                        key={sector}
-                        onClick={() => setFilterSector(sector)}
-                        className={
-                          filterSector === sector
-                            ? "bg-indigo-50 text-pfebrand/80"
-                            : ""
-                        }
-                      >
-                        {sector}
-                      </DropdownMenuItem>
-                    ))
+                <DropdownMenuItem
+                  onClick={() => setFilterSector("")}
+                  className={
+                    filterSector === "" ? "bg-pfebrand/30 text-pfebrand/80" : ""
                   }
-                  </DropdownMenuGroup>
+                >
+                  All Sectors
+                </DropdownMenuItem>
+                {
+                  availableSectors.map((sector) => (
+                    <DropdownMenuItem
+                      key={sector}
+                      onClick={() => setFilterSector(sector)}
+                      className={
+                        filterSector === sector
+                          ? "bg-pfebrand/30 text-pfebrand/80"
+                          : ""
+                      }
+                    >
+                      {sector}
+                    </DropdownMenuItem>
+                  ))
+                }
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -204,7 +215,7 @@ export function ReportsTable() {
         <div className="rounded-b-md overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-pfebrand" />
               <span className="ml-2 text-pfebrand/80">Loading reports...</span>
             </div>
           ) : (
@@ -233,14 +244,25 @@ export function ReportsTable() {
                   </TableRow>
                 ) : (
                   filteredReports.map((report) => (
-                    <TableRow key={report.id} className="hover:bg-slate-50">
+                    <TableRow 
+                      key={report.id} 
+                      className={`border-l-4 border-transparent transition-all hover:bg-pfebrand/30/50 hover:border-pfebg-pfebrand/300/30 ${
+                        reportId && report.id === +reportId
+                          ? "bg-pfebrand/30 border-l-4 border-pfebg-pfebrand/300 shadow-sm" 
+                          : ""
+                      }`}
+                    >
                       <TableCell className="font-medium">
-                        {report.title.slice(0, 30)}
-                        {report.title.length > 30 ? "..." : ""}
+                        {reportId && report.id === +reportId
+                          ? <span className="text-pfebrand">{report.title.slice(0, 30)}{report.title.length > 30 ? "..." : ""}</span> 
+                          : <>{report.title.slice(0, 30)}{report.title.length > 30 ? "..." : ""}</>
+                        }
                       </TableCell>
                       <TableCell className="max-w-xs truncate">
-                        {report.description}
-
+                        {reportId && report.id === +reportId
+                          ? <span className="text-pfebrand">{report.description}</span>
+                          : report.description
+                        }
                       </TableCell>
                       <TableCell>
                         <ImagePreview
@@ -267,13 +289,22 @@ export function ReportsTable() {
                       <TableCell>
                         <Link
                           href={`/admin/users/${report.user.id}`}
-                          className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 hover:underline"
+                          className={`flex items-center gap-1 text-sm ${
+                            reportId && report.id === +reportId
+                              ? "text-pfebrand hover:text-pfebrand/80"
+                              : "text-pfebrand hover:text-pfebrand/80"
+                          } hover:underline`}
                         >
                           <UserRound className="h-3 w-3" />
                           {report.user.name}
                         </Link>
                       </TableCell>
-                      <TableCell>{report.user.sector.name}</TableCell>
+                      <TableCell>
+                        {reportId && report.id === +reportId
+                          ? <span className="text-pfebrand">{report.user.sector.name}</span>
+                          : report.user.sector.name
+                        }
+                      </TableCell>
                       <TableCell>
                         <PdfDownload pdfUrl={report.url} title={report.title} />
                       </TableCell>

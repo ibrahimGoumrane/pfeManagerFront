@@ -36,6 +36,7 @@ import { Sector } from "@/type/sector";
 import { fetchSectors } from "@/network/sector";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export interface UsersTableProps {
   userId: string | undefined;
@@ -45,10 +46,11 @@ export function UsersTable({ userId }: UsersTableProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [sectors, setSectors] = useState<Sector[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUser, setSelectedUser] = useState<number | undefined>(userId ? +userId : undefined);
+  const [selectedUser, setSelectedUser] = useState<number | undefined>(
+    userId ? +userId : undefined
+  );
   const [filterRole, setFilterRole] = useState<string>("all");
   const [filterSector, setFilterSector] = useState<string>("all");
-
 
   const filteredUsers = users
     .filter(
@@ -77,19 +79,18 @@ export function UsersTable({ userId }: UsersTableProps) {
     setSelectedUser(userId);
   };
 
-   // Fetch users and sectors data when component mounts
-   useEffect(() => {
+  // Fetch users and sectors data when component mounts
+  useEffect(() => {
     const fetchData = async () => {
-      
       try {
         // Fetch users data
         const userData = await fetchUsers();
         setUsers(userData);
-        
+
         // Fetch sectors data
         const sectorData = await fetchSectors();
         setSectors(sectorData);
-        
+
         // If a userId is provided, make sure it's selected
         if (userId) {
           setSelectedUser(+userId);
@@ -99,10 +100,9 @@ export function UsersTable({ userId }: UsersTableProps) {
         toast.error("Failed to load data", {
           description: "Using sample data instead. Please try again later.",
         });
-      
       }
     };
-    
+
     fetchData();
   }, [userId]); // Re-fetch if userId changes
 
@@ -152,16 +152,6 @@ export function UsersTable({ userId }: UsersTableProps) {
                   }
                 >
                   Admin
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setFilterRole("manager")}
-                  className={
-                    filterRole === "manager"
-                      ? "bg-pfebrand/10 text-pfebrand"
-                      : ""
-                  }
-                >
-                  Manager
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setFilterRole("user")}
@@ -227,19 +217,20 @@ export function UsersTable({ userId }: UsersTableProps) {
                 </TableRow>
               ) : (
                 filteredUsers.map((user) => (
-                  <TableRow 
-                    key={user.id} 
+                  <TableRow
+                    key={user.id}
                     className={`border-l-4 border-transparent hover:bg-pfebrand/10 hover:border-pfebrand hover:shadow-sm ${
-                      (selectedUser && user.id === +selectedUser )
-                        ? "bg-pfebrand/10 border-l-4 border-pfebrand shadow-sm" 
+                      selectedUser && user.id === +selectedUser
+                        ? "bg-pfebrand/10 border-l-4 border-pfebrand shadow-sm"
                         : ""
                     }`}
                   >
                     <TableCell className="font-medium">
-                      {(selectedUser && user.id === +selectedUser )
-                        ? <span className="text-pfebrand">{user.name}</span> 
-                        : user.name
-                      }
+                      {selectedUser && user.id === +selectedUser ? (
+                        <span className="text-pfebrand">{user.name}</span>
+                      ) : (
+                        user.name
+                      )}
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
@@ -247,9 +238,21 @@ export function UsersTable({ userId }: UsersTableProps) {
                     </TableCell>
                     <TableCell>{user.sector.name}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <FileText className="h-3 w-3 text-slate-400" />
-                        <span>2</span>
+                      <div
+                        className="flex items-center gap-1 text-sm
+                              text-pfebrand hover:text-pfebrand/80
+                             "
+                      >
+                        {user.reports ? (
+                          <>
+                            <FileText className="h-3 w-3 text-slate-400" />
+                            <Link href={`/admin/reports/${user.reports.id}`} className="cursor-pointer hover:underline">
+                              {user.reports.title.substring(0, 20) + "..."}
+                            </Link>
+                          </>
+                        ) : (
+                          <span>No report</span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>

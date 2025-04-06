@@ -54,8 +54,6 @@ export default function SearchReportsPage() {
         params.page || 1,
         params.tags || []
       );
-      console.log(newReports);
-      console.log(hasMoreReports);
 
       if (newSearch) {
         setReports(newReports);
@@ -93,23 +91,34 @@ export default function SearchReportsPage() {
   }, [params]);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">Search Reports</h1>
+    <div className="container mx-auto py-12 px-4 sm:px-6">
+      <div className="space-y-2 mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-pfebrand">
+          Search Reports
+        </h1>
+        <p className="text-muted-foreground">
+          Find final year project reports by keywords, tags, and more.
+        </p>
+      </div>
 
       <SearchForm initialParams={params} onSearch={handleSearch} />
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Results</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">
+          {reports.length > 0 ? `Results (${reports.length})` : "Results"}
+        </h2>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-red-50 border border-red-400 text-red-800 px-4 py-3 rounded-lg mb-6 shadow-sm">
             {error}
           </div>
         )}
 
         {reports.length === 0 && !isLoading ? (
-          <div className="text-center py-8 text-gray-500">
-            No reports found. Try adjusting your search criteria.
+          <div className="text-center py-12 px-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+            <p className="text-muted-foreground">
+              No reports found. Try adjusting your search criteria.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -129,7 +138,15 @@ export default function SearchReportsPage() {
 
         {isLoading && (
           <div className="flex justify-center my-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-pfebrand"></div>
+          </div>
+        )}
+
+        {!isLoading && reports.length > 0 && !hasMore && (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">
+              End of results. No more reports to load.
+            </p>
           </div>
         )}
       </div>

@@ -108,29 +108,38 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-8 rounded-lg shadow-md border border-gray-200"
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="keywords">Keywords</Label>
+          <Label htmlFor="keywords" className="text-gray-900 font-medium">
+            Keywords
+          </Label>
           <Input
             id="keywords"
             placeholder="Search by title or description"
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
+            className="focus-visible:ring-pfebrand/30 border-gray-200"
           />
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="tags">Tags</Label>
+          <Label htmlFor="tags" className="text-gray-900 font-medium">
+            Tags
+          </Label>
           <div className="flex flex-wrap gap-2 mb-2">
             {tags.map((tag) => (
               <Badge
                 key={tag}
                 onClick={() => handleRemoveTag(tag)}
                 variant="secondary"
-                className="flex items-center cursor-pointer gap-1"
+                className="flex items-center gap-1 bg-pfebrand/10 text-pfebrand hover:bg-pfebrand/15 cursor-pointer"
               >
                 {tag}
+                <X className="h-3 w-3" />
               </Badge>
             ))}
           </div>
@@ -140,6 +149,7 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
               placeholder="Add a tag"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
+              className="focus-visible:ring-pfebrand/30 border-gray-200"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && tagInput.trim()) {
                   e.preventDefault();
@@ -152,6 +162,7 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
               variant="outline"
               onClick={() => handleAddTag(tagInput)}
               disabled={!tagInput.trim()}
+              className="border-pfebrand text-pfebrand hover:bg-pfebrand/10 hover:text-pfebrand"
             >
               Add
             </Button>
@@ -163,7 +174,7 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
                 <Badge
                   key={tag}
                   variant="outline"
-                  className="cursor-pointer hover:bg-secondary"
+                  className="border-pfebrand/20 text-pfebrand hover:bg-pfebrand/10 cursor-pointer"
                   onClick={() => handleAddTag(tag)}
                 >
                   {tag}
@@ -173,11 +184,18 @@ export function SearchForm({ initialParams, onSearch }: SearchFormProps) {
         </div>
       </div>
 
-      <div className="flex justify-end gap-2 mt-6">
-        <Button type="button" variant="outline" onClick={handleReset}>
+      <div className="flex justify-end gap-4 pt-4 border-t border-gray-100 mt-6">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleReset}
+          className="border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+        >
           Reset
         </Button>
-        <Button type="submit">Search</Button>
+        <Button type="submit" className="bg-pfebrand hover:bg-pfebrand/90">
+          Search
+        </Button>
       </div>
     </form>
   );

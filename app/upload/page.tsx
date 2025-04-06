@@ -176,18 +176,23 @@ export default function UploadPage() {
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 max-w-4xl">
       <div className="space-y-2 mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Upload New Report</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-pfebrand">
+          Upload New Report
+        </h1>
         <p className="text-muted-foreground">
           Share your final year project report with the community.
         </p>
       </div>
 
       {alert.show && (
-        <Alert variant={alert.type === "error" ? "destructive" : "default"}>
+        <Alert
+          variant={alert.type === "error" ? "destructive" : "default"}
+          className="mb-6 border-l-4 border-l-pfebrand shadow-sm"
+        >
           {alert.type === "error" ? (
             <AlertCircle className="h-4 w-4" />
           ) : (
-            <CheckCircle className="h-4 w-4" />
+            <CheckCircle className="h-4 w-4 text-green-500" />
           )}
           <AlertTitle>{alert.title}</AlertTitle>
           <AlertDescription>{alert.message}</AlertDescription>
@@ -196,11 +201,11 @@ export default function UploadPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-8 bg-white p-8 rounded-lg shadow-sm border"
+        className="space-y-8 bg-white p-8 rounded-lg shadow-md border border-gray-200"
       >
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="title">
+            <Label htmlFor="title" className="text-gray-900 font-medium">
               Title <span className="text-red-500">*</span>
             </Label>
             <Input
@@ -210,30 +215,35 @@ export default function UploadPage() {
               onChange={(e) => setTitle(e.target.value)}
               disabled={isUploading}
               required
+              className="focus-visible:ring-pfebrand/30 border-gray-200"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-gray-900 font-medium">
+              Description
+            </Label>
             <Textarea
               id="description"
               placeholder="Write a brief description of your report..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={isUploading}
-              className="min-h-32"
+              className="min-h-32 focus-visible:ring-pfebrand/30 border-gray-200"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="tags">Tags</Label>
+            <Label htmlFor="tags" className="text-gray-900 font-medium">
+              Tags
+            </Label>
             <div className="flex flex-wrap gap-2 mb-2">
               {tags.map((tag) => (
                 <Badge
                   key={tag}
                   onClick={() => !isUploading && handleRemoveTag(tag)}
                   variant="secondary"
-                  className={`flex items-center gap-1 ${
+                  className={`flex items-center gap-1 bg-pfebrand/10 text-pfebrand hover:bg-pfebrand/15 ${
                     isUploading ? "" : "cursor-pointer"
                   }`}
                 >
@@ -250,6 +260,7 @@ export default function UploadPage() {
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 disabled={isUploading}
+                className="focus-visible:ring-pfebrand/30 border-gray-200"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && tagInput.trim()) {
                     e.preventDefault();
@@ -262,6 +273,7 @@ export default function UploadPage() {
                 variant="outline"
                 onClick={() => handleAddTag(tagInput)}
                 disabled={isUploading || !tagInput.trim()}
+                className="border-pfebrand text-pfebrand hover:bg-pfebrand/10 hover:text-pfebrand"
               >
                 Add
               </Button>
@@ -273,7 +285,7 @@ export default function UploadPage() {
                   <Badge
                     key={tag}
                     variant="outline"
-                    className={`hover:bg-secondary ${
+                    className={`border-pfebrand/20 text-pfebrand hover:bg-pfebrand/10 ${
                       isUploading ? "" : "cursor-pointer"
                     }`}
                     onClick={() => !isUploading && handleAddTag(tag)}
@@ -286,7 +298,7 @@ export default function UploadPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="preview">
+            <Label htmlFor="preview" className="text-gray-900 font-medium">
               Preview Image <span className="text-red-500">*</span>
             </Label>
             <div className="flex flex-col gap-2">
@@ -298,7 +310,7 @@ export default function UploadPage() {
                 onChange={(e) => setPreviewImage(e.target.files)}
                 disabled={isUploading}
                 required
-                className="cursor-pointer"
+                className="cursor-pointer border-gray-200 focus-visible:ring-pfebrand/30 file:text-pfebrand"
               />
               <p className="text-sm text-muted-foreground">
                 Upload an image that represents your report (JPEG, PNG, etc.)
@@ -307,7 +319,7 @@ export default function UploadPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="pdf">
+            <Label htmlFor="pdf" className="text-gray-900 font-medium">
               PDF File <span className="text-red-500">*</span>
             </Label>
             <div className="flex flex-col gap-2">
@@ -319,7 +331,7 @@ export default function UploadPage() {
                 onChange={(e) => setPdfFile(e.target.files)}
                 disabled={isUploading}
                 required
-                className="cursor-pointer"
+                className="cursor-pointer border-gray-200 focus-visible:ring-pfebrand/30 file:text-pfebrand"
               />
               <p className="text-sm text-muted-foreground">
                 Upload your report in PDF format only
@@ -328,26 +340,35 @@ export default function UploadPage() {
           </div>
 
           {isUploading && (
-            <div className="space-y-2 mt-6">
+            <div className="space-y-2 mt-6 bg-pfebrand/5 p-4 rounded-md border border-pfebrand/20">
               <div className="flex justify-between text-sm mb-1">
-                <span>Uploading...</span>
-                <span>{progress}%</span>
+                <span className="font-medium text-pfebrand">Uploading...</span>
+                <span className="font-medium text-pfebrand">{progress}%</span>
               </div>
-              <Progress value={progress} className="h-2" />
+              <Progress
+                value={progress}
+                className="h-2 bg-pfebrand/10"
+                indicatorClassName="bg-pfebrand"
+              />
             </div>
           )}
         </div>
 
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end gap-4 pt-4 border-t border-gray-100">
           <Button
             type="button"
             variant="outline"
             onClick={() => router.back()}
             disabled={isUploading}
+            className="border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900"
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isUploading}>
+          <Button
+            type="submit"
+            disabled={isUploading}
+            className="bg-pfebrand hover:bg-pfebrand/90"
+          >
             {isUploading ? "Uploading..." : "Upload Report"}
           </Button>
         </div>

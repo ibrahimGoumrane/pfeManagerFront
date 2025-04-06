@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,8 +42,7 @@ export default function UploadPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch available tags from API
-  useState(() => {
+  useEffect(() => {
     const loadTags = async () => {
       try {
         const response = await fetchTags();
@@ -58,8 +57,7 @@ export default function UploadPage() {
     loadTags();
   }, []);
 
-  // Filter tags based on input
-  useState(() => {
+  useEffect(() => {
     if (tagInput.trim() === "") {
       setFilteredTags(availableTags.filter((tag) => !tags.includes(tag)));
     } else {
@@ -185,7 +183,7 @@ export default function UploadPage() {
       </div>
 
       {alert.show && (
-        <Alert variant={alert.type === "error" ? "destructive" : "success"}>
+        <Alert variant={alert.type === "error" ? "destructive" : "default"}>
           {alert.type === "error" ? (
             <AlertCircle className="h-4 w-4" />
           ) : (

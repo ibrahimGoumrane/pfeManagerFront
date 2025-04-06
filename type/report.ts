@@ -1,3 +1,4 @@
+import { Tag } from "./tag";
 import { User } from "./users";
 export interface Report {
     id: number;
@@ -8,6 +9,7 @@ export interface Report {
     validated: boolean;
     user: User;
     created_at: string;
+    tags: Tag[];
     updated_at: string;
 }
 

@@ -62,10 +62,10 @@ export const fetchReport = async (id: number): Promise<Report> => {
 };
 
 // Create a report
-export const createReport = async (data: CreateReport): Promise<Report> => {
+export const createReport = async (formData: FormData): Promise<Report> => {
   return (await fetchData<Report>("/reports", {
     method: "POST",
-    body: JSON.stringify(data),
+    body: formData, // Send the FormData directly, don't stringify it
   })) as Report;
 };
 
@@ -81,7 +81,10 @@ export const updateReport = async (
 };
 
 // Validate a report
-export const validateReport = async (id: number , newStatus : boolean): Promise<Report> => {
+export const validateReport = async (
+  id: number,
+  newStatus: boolean
+): Promise<Report> => {
   return (await fetchData<Report>(`/reports/${id}/validate`, {
     method: "PUT",
     body: JSON.stringify({ validated: newStatus }),

@@ -5,7 +5,7 @@ import {
   UnauthorizedError,
   NotFoundError,
   InternalServerError,
-  LockedError
+  LockedError,
 } from "@/errors/main";
 import { serverAddress } from "@/config/main";
 

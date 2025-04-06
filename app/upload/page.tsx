@@ -132,18 +132,20 @@ export default function UploadPage() {
       setIsUploading(true);
       const cleanupProgress = simulateProgress();
 
-      // Prepare data according to CreateReport type
-      const reportData: CreateReport = {
-        title,
-        description,
-        preview: previewImage,
-        url: pdfFile,
-        validated: false,
-        user: {} as any, // User will be set on the server based on authenticated user
-        tags,
-      };
+      // Create FormData to handle file uploads
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("preview", previewImage[0]); // Send the actual File object
+      formData.append("url", pdfFile[0]); // Send the actual File object
+      formData.append("validated", "false");
 
-      await createReport(reportData);
+      // Append tags as separate fields or as JSON
+      tags.forEach((tag, index) => {
+        formData.append(`tags[${index}]`, tag);
+      });
+
+      await createReport(formData);
 
       // Complete the progress bar
       setProgress(100);

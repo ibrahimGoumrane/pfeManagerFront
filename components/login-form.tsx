@@ -41,10 +41,9 @@ export function LoginForm() {
 
     try {
       const user = await login(values.email, values.password) // Call login function
+      localStorage.setItem('user', JSON.stringify(user));
+      window.dispatchEvent(new Event('storage'));
 
-      toast.success(`Welcome back, ${user.name || "User"}!`, {
-        description: "Redirecting to dashboard...",
-      })
 
       router.push("/")
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

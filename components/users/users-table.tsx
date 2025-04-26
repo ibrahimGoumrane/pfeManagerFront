@@ -57,7 +57,7 @@ export function UsersTable({ userId }: UsersTableProps) {
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.sector.name.toLowerCase().includes(searchTerm.toLowerCase())
+        user.sector?.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((user) => {
       if (filterRole === "all") return true;
@@ -236,7 +236,7 @@ export function UsersTable({ userId }: UsersTableProps) {
                     <TableCell>
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell>{user.sector.name}</TableCell>
+                    <TableCell>{user.sector?.name}</TableCell>
                     <TableCell>
                       <div
                         className="flex items-center gap-1 text-sm

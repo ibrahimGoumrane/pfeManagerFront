@@ -59,10 +59,10 @@ export function SignUpForm() {
         password: values.password,
         password_confirmation: values.confirmPassword,
       }) // Call signup function
+      
+      localStorage.setItem('user', JSON.stringify(user));
+      window.dispatchEvent(new Event('storage'));
 
-      toast.success("Account created!", {
-        description: `Welcome, ${user.name || "User"}! Redirecting to dashboard...`,
-      })
 
       router.push("/")
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

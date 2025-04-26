@@ -95,7 +95,7 @@ export function ReportCard({ report }: ReportCardProps) {
           </Badge>
         )}
         <Link
-          href={report.url}
+          href={`/reports/${report.id}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center text-sm text-pfebrand hover:text-pfebrand/80 hover:underline"

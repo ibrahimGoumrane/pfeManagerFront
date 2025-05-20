@@ -64,7 +64,7 @@ export function SignUpForm() {
       window.dispatchEvent(new Event('storage'));
 
 
-      router.push("/")
+      router.push("/reports/search") // Redirect to the search page
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Signup failed", {

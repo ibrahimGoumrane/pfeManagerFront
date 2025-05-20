@@ -2,40 +2,14 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
-import { X, CalendarIcon } from "lucide-react";
-import { format, set } from "date-fns";
-import type { SearchParams } from "@/type/SearchParams";
 import { fetchTags } from "@/network/tag";
-
-// Sample sectors - replace with your actual data
-const sectors = [
-  "Technology",
-  "Healthcare",
-  "Finance",
-  "Education",
-  "Manufacturing",
-  "Retail",
-  "Energy",
-  "Other",
-];
+import type { SearchParams } from "@/type/SearchParams";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface SearchFormProps {
   initialParams: SearchParams;

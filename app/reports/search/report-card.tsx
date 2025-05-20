@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { serverAddress } from "@/config/main";
 import {
   Card,
   CardContent,
@@ -11,10 +12,6 @@ import {
 } from "@/components/ui/card";
 import type { Report } from "@/type/report";
 import { FileText, Calendar, User, ExternalLink } from "lucide-react";
-
-// Set your backend URL here - could be imported from environment configuration
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 interface ReportCardProps {
   report: Report;
@@ -42,11 +39,11 @@ export function ReportCard({ report }: ReportCardProps) {
 
     // If the URL already includes /storage, just prepend the backend URL
     if (normalizedPath.includes("/storage/")) {
-      return `${BACKEND_URL}${normalizedPath}`;
+      return `${serverAddress}${normalizedPath}`;
     }
 
     // Otherwise, prepend the full path
-    return `${BACKEND_URL}/storage${normalizedPath}`;
+    return `${serverAddress}/storage${normalizedPath}`;
   };
 
   return (

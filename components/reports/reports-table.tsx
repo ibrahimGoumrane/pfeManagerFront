@@ -59,7 +59,7 @@ export function ReportsTable({ reportId }: ReportsTableProps) {
         report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         report.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         report.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        report.user.sector.name.toLowerCase().includes(searchTerm.toLowerCase())
+        report.user.sector?.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((report) => {
       if (filterStatus === "validated") return report.validated;
@@ -67,7 +67,7 @@ export function ReportsTable({ reportId }: ReportsTableProps) {
       return true;
     }).filter((report) => {
       if (filterSector === "") return true;
-      return report.user.sector.name === filterSector;
+      return report.user.sector?.name === filterSector;
     });
 
   const handleValidationChange = async (id: number, validated: boolean) => {
@@ -301,8 +301,8 @@ export function ReportsTable({ reportId }: ReportsTableProps) {
                       </TableCell>
                       <TableCell>
                         {reportId && report.id === +reportId
-                          ? <span className="text-pfebrand">{report.user.sector.name}</span>
-                          : report.user.sector.name
+                          ? <span className="text-pfebrand">{report.user.sector?.name}</span>
+                          : report.user.sector?.name
                         }
                       </TableCell>
                       <TableCell>

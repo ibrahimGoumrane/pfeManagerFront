@@ -33,7 +33,7 @@ export const searchReports = async (
     if (toDate) queryParams.append("toDate", toDate);
 
     // Add all tags as separate query parameters
-    tags.forEach((tag) => queryParams.append("tags", tag));
+    tags.forEach((tag) => queryParams.append("tags[]", tag));
 
     const response = await fetchData<{
       reports: Report[];

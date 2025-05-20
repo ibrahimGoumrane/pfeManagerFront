@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Report } from "@/types/reports";
+import type { Report } from "@/type/report";
 import { FileText, Calendar, User, ExternalLink } from "lucide-react";
 
 // Set your backend URL here - could be imported from environment configuration

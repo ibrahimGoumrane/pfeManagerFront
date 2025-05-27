@@ -106,6 +106,10 @@ export function UsersTable({ userId }: UsersTableProps) {
     fetchData();
   }, [userId]); // Re-fetch if userId changes
 
+  if (!users || !sectors) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Card className="shadow-md border-0">
       <CardHeader className="bg-gradient-to-r from-pfebrand/10 to-pfebrand/5 rounded-t-lg">

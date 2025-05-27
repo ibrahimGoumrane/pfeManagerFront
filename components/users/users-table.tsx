@@ -65,7 +65,7 @@ export function UsersTable({ userId }: UsersTableProps) {
     })
     .filter((user) => {
       if (filterSector === "all") return true;
-      return user?.sector.id === +filterSector;
+      return user?.sector?.id === +filterSector;
     });
 
   const handleUpdateUser = (updatedUser: User) => {
@@ -176,10 +176,10 @@ export function UsersTable({ userId }: UsersTableProps) {
                 </DropdownMenuItem>
                 {sectors.map((sector) => (
                   <DropdownMenuItem
-                    key={sector.id}
-                    onClick={() => setFilterSector(`${sector.id}`)}
+                    key={sector?.id}
+                    onClick={() => setFilterSector(`${sector?.id}`)}
                     className={
-                      +filterSector === sector.id
+                      +filterSector === sector?.id
                         ? "bg-pfebrand/10 text-pfebrand"
                         : ""
                     }
@@ -246,7 +246,10 @@ export function UsersTable({ userId }: UsersTableProps) {
                         {user?.reports ? (
                           <>
                             <FileText className="h-3 w-3 text-slate-400" />
-                            <Link href={`/admin/reports/${user?.reports.id}`} className="cursor-pointer hover:underline">
+                            <Link
+                              href={`/admin/reports/${user?.reports.id}`}
+                              className="cursor-pointer hover:underline"
+                            >
                               {user?.reports.title.substring(0, 20) + "..."}
                             </Link>
                           </>

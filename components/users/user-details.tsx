@@ -142,7 +142,7 @@ export function UserDetails({
                 Sector
               </Label>
               <Select
-                value={(formData.sector?.id).toString()}
+                value={formData.sector?.id?.toString()}
                 onValueChange={(value) => handleChange("sector_id", value)}
               >
                 <SelectTrigger className="col-span-3 w-full border-pfebrand/20 focus:ring-pfebrand/30 text-pfebrand/80">
@@ -152,7 +152,7 @@ export function UserDetails({
                   {sectors.map((sector) => (
                     <SelectItem
                       key={sector?.id}
-                      value={(sector?.id).toString()}
+                      value={sector?.id?.toString()}
                       className="focus:bg-pfebrand/10 focus:text-pfebrand"
                     >
                       {sector.name}

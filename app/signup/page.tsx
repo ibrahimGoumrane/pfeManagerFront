@@ -52,14 +52,14 @@ export default function SignUpPage() {
         </div>
         
         {/* Footer */}
-        <div className="px-8 py-4 border-t border-gray-100">
+        {/* <div className="px-8 py-4 border-t border-gray-100">
           <p className="text-xs text-center text-muted-foreground">
             By signing up, you agree to our{" "}
             <Link href="/terms" className="underline underline-offset-2 hover:text-pfebrand">Terms of Service</Link>{" "}
             and{" "}
             <Link href="/privacy" className="underline underline-offset-2 hover:text-pfebrand">Privacy Policy</Link>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   )

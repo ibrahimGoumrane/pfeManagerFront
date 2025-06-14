@@ -1,19 +1,23 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string; role?: string } | null>(null);
+  const [user, setUser] = useState<{
+    name: string;
+    email: string;
+    role?: string;
+  } | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     // Fetch user authentication status from localStorage
     const checkAuthStatus = () => {
-      const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+      const storedUser = JSON.parse(localStorage.getItem("user") || "null");
       if (storedUser) {
         setIsLoggedIn(true);
         setUser(storedUser);
@@ -27,22 +31,22 @@ export default function Home() {
     checkAuthStatus();
 
     // Add event listener for storage changes
-    window.addEventListener('storage', checkAuthStatus);
+    window.addEventListener("storage", checkAuthStatus);
 
     // Add scroll listener for navbar effect
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('storage', checkAuthStatus);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("storage", checkAuthStatus);
     };
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
     setUser(null);
     setIsMenuOpen(false);
@@ -60,7 +64,7 @@ export default function Home() {
             src="/assets/ensamc.jpg"
             alt="ENSAM Casablanca"
             fill
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            style={{ objectFit: "cover", objectPosition: "center" }}
             priority
             className="brightness-75"
           />
@@ -71,7 +75,9 @@ export default function Home() {
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 animate-fade-in">
               <span className="text-white">Pfe</span>
-              <span className="text-pfebrand bg-white px-2 rounded">Archive</span>
+              <span className="text-pfebrand bg-white px-2 rounded">
+                Archive
+              </span>
             </h1>
 
             {isLoggedIn ? (
@@ -80,7 +86,8 @@ export default function Home() {
                   Welcome back, <span className="font-bold">{user?.name}</span>!
                 </p>
                 <p className="text-lg mb-8">
-                  Continue exploring ENSAM Casablanca&apos;s research projects and academic excellence.
+                  Continue exploring ENSAM Casablanca&apos;s research projects
+                  and academic excellence.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
                   <Link href="/reports/search">
@@ -104,14 +111,19 @@ export default function Home() {
                   </Link>
                   <Link href="/upload">
                     <button className="px-8 py-4 bg-white text-pfebrand font-medium rounded-md hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl flex items-center justify-center">
-                      <svg 
-                        className="w-5 h-5 mr-2" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24" 
+                      <svg
+                        className="w-5 h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        ></path>
                       </svg>
                       Submit Report
                     </button>
@@ -121,17 +133,20 @@ export default function Home() {
             ) : (
               <div className="animate-fade-in-up">
                 <p className="text-xl sm:text-2xl font-light mb-8">
-                  Preserving knowledge, inspiring innovation - Your gateway to ENSAM Casablanca&apos;s legacy of excellence
+                  Preserving knowledge, inspiring innovation - Your gateway to
+                  ENSAM Casablanca&apos;s legacy of excellence
                 </p>
 
                 <p className="text-base sm:text-lg mb-12 max-w-2xl mx-auto">
-                  Access, explore, and build upon years of final year projects from ENSAM Casablanca students. Discover research, methodologies, and innovations from previous generations.
+                  Access, explore, and build upon years of final year projects
+                  from ENSAM Casablanca students. Discover research,
+                  methodologies, and innovations from previous generations.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="/login">
+                  <Link href="/reports/search">
                     <button className="px-8 py-4 bg-pfebrand text-white font-medium rounded-md hover:bg-pfebrand/90 transition-all shadow-lg hover:shadow-xl">
-                      Sign In
+                      Search Reports
                     </button>
                   </Link>
                   <Link href="/signup">
@@ -169,7 +184,8 @@ export default function Home() {
               Continue Your Research Journey
             </h2>
             <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12">
-              Pick up where you left off or discover new resources to enhance your academic pursuits.
+              Pick up where you left off or discover new resources to enhance
+              your academic pursuits.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -195,7 +211,8 @@ export default function Home() {
                   Recent Activity
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Resume your research where you left off with quick access to your recently viewed projects.
+                  Resume your research where you left off with quick access to
+                  your recently viewed projects.
                 </p>
                 <Link href="/reports/search" className="text-pfebrand font-medium hover:text-pfebrand/80">
                   View Recent Activity →
@@ -224,7 +241,8 @@ export default function Home() {
                   Saved Projects
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Access your collection of saved projects for reference and inspiration.
+                  Access your collection of saved projects for reference and
+                  inspiration.
                 </p>
                 <Link href="/reports/search" className="text-pfebrand font-medium hover:text-pfebrand/80">
                   View Saved Projects →
@@ -253,7 +271,8 @@ export default function Home() {
                   Recommended For You
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Discover projects tailored to your interests and academic focus.
+                  Discover projects tailored to your interests and academic
+                  focus.
                 </p>
                 <Link href="/reports/search" className="text-pfebrand font-medium hover:text-pfebrand/80">
                   View Recommendations →
@@ -292,7 +311,8 @@ export default function Home() {
                   Comprehensive Repository
                 </h3>
                 <p className="text-gray-600">
-                  Access years of final year projects in one centralized location, organized by department, year, and topic.
+                  Access years of final year projects in one centralized
+                  location, organized by department, year, and topic.
                 </p>
               </div>
 
@@ -318,7 +338,8 @@ export default function Home() {
                   Advanced Search
                 </h3>
                 <p className="text-gray-600">
-                  Find relevant projects using our powerful search functionality with filters for keywords, technologies, and supervisors.
+                  Find relevant projects using our powerful search functionality
+                  with filters for keywords, technologies, and supervisors.
                 </p>
               </div>
 
@@ -344,7 +365,8 @@ export default function Home() {
                   Inspiration & Resources
                 </h3>
                 <p className="text-gray-600">
-                  Find inspiration for your own project and access valuable methodologies, frameworks, and best practices.
+                  Find inspiration for your own project and access valuable
+                  methodologies, frameworks, and best practices.
                 </p>
               </div>
             </div>
@@ -359,7 +381,8 @@ export default function Home() {
             PfeArchive by the Numbers
           </h2>
           <p className="text-center text-gray-600 max-w-3xl mx-auto mb-12">
-            Join a growing community of ENSAM Casablanca students and alumni sharing knowledge and innovation.
+            Join a growing community of ENSAM Casablanca students and alumni
+            sharing knowledge and innovation.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -369,14 +392,18 @@ export default function Home() {
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="text-4xl font-bold text-pfebrand mb-2">12</div>
-              <div className="text-gray-500 font-medium">Academic Departments</div>
+              <div className="text-gray-500 font-medium">
+                Academic Departments
+              </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="text-4xl font-bold text-pfebrand mb-2">15+</div>
               <div className="text-gray-500 font-medium">Years of Archives</div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="text-4xl font-bold text-pfebrand mb-2">2,000+</div>
+              <div className="text-4xl font-bold text-pfebrand mb-2">
+                2,000+
+              </div>
               <div className="text-gray-500 font-medium">Active Users</div>
             </div>
           </div>
@@ -384,78 +411,101 @@ export default function Home() {
       </div>
 
       {/* CTA Section - Different for logged in users */}
-{isLoggedIn ? (
-  <div className="bg-gradient-to-r from-pfebrand to-blue-700 py-12 px-4 sm:px-6 lg:px-8">
-    <div className="max-w-4xl mx-auto text-center">
-      <h2 className="text-3xl font-bold text-white mb-6">
-        Share Your Own Academic Work
-      </h2>
-      <p className="text-white/90 mb-8 text-lg">
-        Contribute to the archive by sharing your own final year project or research work with the ENSAM community.
-      </p>
-      <Link href="/upload">
-        <button className="px-8 py-4 bg-white text-pfebrand font-medium rounded-md hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl flex items-center justify-center mx-auto">
-          <svg 
-            className="w-5 h-5 mr-2" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          Submit Your Project
-        </button>
-      </Link>
-    </div>
-  </div>
-) : (
-  <div className="bg-pfebrand py-12 px-4 sm:px-6 lg:px-8">
-    <div className="max-w-4xl mx-auto text-center">
-      <h2 className="text-3xl font-bold text-white mb-6">
-        Ready to explore ENSAM Casablanca&apos;s academic excellence?
-      </h2>
-      <p className="text-white/80 mb-8 text-lg">
-        Join PfeArchive today and discover the wealth of knowledge from generations of ENSAM Casablanca students.
-      </p>
-      <Link href="/signup">
-        <button className="px-8 py-4 bg-white text-pfebrand font-medium rounded-md hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl">
-          Get Started Now
-        </button>
-      </Link>
-    </div>
-  </div>
-)}
+      {isLoggedIn ? (
+        <div className="bg-gradient-to-r from-pfebrand to-blue-700 py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Share Your Own Academic Work
+            </h2>
+            <p className="text-white/90 mb-8 text-lg">
+              Contribute to the archive by sharing your own final year project
+              or research work with the ENSAM community.
+            </p>
+            <Link href="/upload">
+              <button className="px-8 py-4 bg-white text-pfebrand font-medium rounded-md hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl flex items-center justify-center mx-auto">
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+                Submit Your Project
+              </button>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-pfebrand py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Ready to explore ENSAM Casablanca&apos;s academic excellence?
+            </h2>
+            <p className="text-white/80 mb-8 text-lg">
+              Join PfeArchive today and discover the wealth of knowledge from
+              generations of ENSAM Casablanca students.
+            </p>
+            <Link href="/signup">
+              <button className="px-8 py-4 bg-white text-pfebrand font-medium rounded-md hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl">
+                Get Started Now
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
 
-{/* Footer */}
-<footer className="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
-  <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-    <div className="mb-4 md:mb-0">
-      <div className="text-xl font-bold">
-        <span>Pfe</span>
-        <span className="bg-white text-pfebrand px-2 rounded">Archive</span>
-      </div>
-      <p className="text-gray-400">A project by ENSAM Casablanca students</p>
-    </div>
-    <div className="flex flex-wrap gap-6 md:gap-8 justify-center">
-      <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
-        About
-      </Link>
-      <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-        Contact
-      </Link>
-      <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-        Terms
-      </Link>
-      <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-        Privacy
-      </Link>
-    </div>
-  </div>
-  <div className="max-w-7xl mx-auto mt-6 text-center text-gray-500 text-sm">
-    © {new Date().getFullYear()} PfeArchive. All rights reserved.
-  </div>
-</footer>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-4 md:mb-0">
+            <div className="text-xl font-bold">
+              <span>Pfe</span>
+              <span className="bg-white text-pfebrand px-2 rounded">
+                Archive
+              </span>
+            </div>
+            <p className="text-gray-400">
+              A project by ENSAM Casablanca students
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-6 md:gap-8 justify-center">
+            <Link
+              href="/about"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Contact
+            </Link>
+            <Link
+              href="/terms"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Privacy
+            </Link>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-6 text-center text-gray-500 text-sm">
+          © {new Date().getFullYear()} PfeArchive. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }

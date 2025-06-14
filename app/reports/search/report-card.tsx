@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { imageAddress } from "@/config/main";
 import {
   Card,
   CardContent,
@@ -9,52 +10,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Report } from "@/types/reports";
+import type { Report } from "@/type/report";
 import { FileText, Calendar, User, ExternalLink } from "lucide-react";
-
-// Set your backend URL here - could be imported from environment configuration
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 interface ReportCardProps {
   report: Report;
 }
 
 export function ReportCard({ report }: ReportCardProps) {
-  // Format the preview URL to ensure it's an absolute URL or starts with /
-  const getPreviewUrl = () => {
-    if (!report.preview) {
-      return "/placeholder.svg?height=160&width=320";
-    }
-
-    // If the URL already starts with http:// or https://, use it directly
-    if (
-      report.preview.startsWith("http://") ||
-      report.preview.startsWith("https://")
-    ) {
-      return report.preview;
-    }
-
-    // Make sure the path always starts with a slash for proper joining
-    const normalizedPath = report.preview.startsWith("/")
-      ? report.preview
-      : `/${report.preview}`;
-
-    // If the URL already includes /storage, just prepend the backend URL
-    if (normalizedPath.includes("/storage/")) {
-      return `${BACKEND_URL}${normalizedPath}`;
-    }
-
-    // Otherwise, prepend the full path
-    return `${BACKEND_URL}/storage${normalizedPath}`;
-  };
-
   return (
     <Card className="h-full flex flex-col overflow-hidden border-gray-200 shadow-md hover:shadow-lg transition-shadow">
       <CardHeader className="pb-2 space-y-2">
         <div className="relative w-full h-40 mb-2 overflow-hidden rounded-md">
           <Image
-            src={getPreviewUrl()}
+            src={imageAddress + report.preview}
             unoptimized
             alt={report.title}
             fill

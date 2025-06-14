@@ -88,6 +88,7 @@ export default function SearchReportsPage() {
   useEffect(() => {
     const newSearch = params.page === 1;
     fetchReports(newSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
   return (

@@ -55,23 +55,23 @@ export function UsersTable({ userId }: UsersTableProps) {
   const filteredUsers = users
     .filter(
       (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.sector?.name.toLowerCase().includes(searchTerm.toLowerCase())
+        user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user?.sector?.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((user) => {
       if (filterRole === "all") return true;
-      return user.role === filterRole;
+      return user?.role === filterRole;
     })
     .filter((user) => {
       if (filterSector === "all") return true;
-      return user.sector.id === +filterSector;
+      return user?.sector?.id === +filterSector;
     });
 
   const handleUpdateUser = (updatedUser: User) => {
     setUsers(
       users.map((user) =>
-        user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+        user?.id === updatedUser?.id ? { ...user, ...updatedUser } : user
       )
     );
   };
@@ -105,6 +105,10 @@ export function UsersTable({ userId }: UsersTableProps) {
 
     fetchData();
   }, [userId]); // Re-fetch if userId changes
+
+  if (!users || !sectors) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Card className="shadow-md border-0">
@@ -176,10 +180,10 @@ export function UsersTable({ userId }: UsersTableProps) {
                 </DropdownMenuItem>
                 {sectors.map((sector) => (
                   <DropdownMenuItem
-                    key={sector.id}
-                    onClick={() => setFilterSector(`${sector.id}`)}
+                    key={sector?.id}
+                    onClick={() => setFilterSector(`${sector?.id}`)}
                     className={
-                      +filterSector === sector.id
+                      +filterSector === sector?.id
                         ? "bg-pfebrand/10 text-pfebrand"
                         : ""
                     }
@@ -218,36 +222,39 @@ export function UsersTable({ userId }: UsersTableProps) {
               ) : (
                 filteredUsers.map((user) => (
                   <TableRow
-                    key={user.id}
+                    key={user?.id}
                     className={`border-l-4 border-transparent hover:bg-pfebrand/10 hover:border-pfebrand hover:shadow-sm ${
-                      selectedUser && user.id === +selectedUser
+                      selectedUser && user?.id === +selectedUser
                         ? "bg-pfebrand/10 border-l-4 border-pfebrand shadow-sm"
                         : ""
                     }`}
                   >
                     <TableCell className="font-medium">
-                      {selectedUser && user.id === +selectedUser ? (
-                        <span className="text-pfebrand">{user.name}</span>
+                      {selectedUser && user?.id === +selectedUser ? (
+                        <span className="text-pfebrand">{user?.name}</span>
                       ) : (
-                        user.name
+                        user?.name
                       )}
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user?.email}</TableCell>
                     <TableCell>
-                      <RoleBadge role={user.role} />
+                      <RoleBadge role={user?.role} />
                     </TableCell>
-                    <TableCell>{user.sector?.name}</TableCell>
+                    <TableCell>{user?.sector?.name}</TableCell>
                     <TableCell>
                       <div
                         className="flex items-center gap-1 text-sm
                               text-pfebrand hover:text-pfebrand/80
                              "
                       >
-                        {user.reports ? (
+                        {user?.reports ? (
                           <>
                             <FileText className="h-3 w-3 text-slate-400" />
-                            <Link href={`/admin/reports/${user.reports.id}`} className="cursor-pointer hover:underline">
-                              {user.reports.title.substring(0, 20) + "..."}
+                            <Link
+                              href={`/admin/reports/${user?.reports.id}`}
+                              className="cursor-pointer hover:underline"
+                            >
+                              {user?.reports.title.substring(0, 20) + "..."}
                             </Link>
                           </>
                         ) : (

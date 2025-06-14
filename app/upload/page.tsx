@@ -349,7 +349,7 @@ export default function UploadPage() {
               <Progress
                 value={progress}
                 className="h-2 bg-pfebrand/10"
-                indicatorClassName="bg-pfebrand"
+                color="bg-pfebrand"
               />
             </div>
           )}

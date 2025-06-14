@@ -113,7 +113,7 @@ export default function UploadPage() {
       try {
         setLoadingReport(true);
         const report = await fetchUserReports(user.id);
-        if (report) {
+        if (report?.url) {
           router.push("/reports/search");
         }
       } catch (error) {

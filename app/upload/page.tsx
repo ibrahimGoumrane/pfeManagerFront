@@ -9,7 +9,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { createReport } from "@/network/report";
-import { CreateReport } from "@/type/report";
 import { X, AlertCircle, CheckCircle } from "lucide-react";
 import { fetchTags } from "@/network/tag";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -159,7 +158,7 @@ export default function UploadPage() {
 
       // Redirect to reports page after successful upload
       setTimeout(() => {
-        router.push("/reports");
+        router.push("/reports/search");
       }, 2000);
 
       cleanupProgress();

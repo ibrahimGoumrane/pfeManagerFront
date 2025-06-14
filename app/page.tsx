@@ -50,183 +50,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md text-gray-800' : 'bg-transparent text-white'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="text-2xl font-bold">
-                  <span>Pfe</span>
-                  <span className={`${isScrolled ? 'bg-pfebrand text-white' : 'bg-white text-pfebrand'} px-2 rounded`}>Archive</span>
-                </span>
-              </div>
-            </div>
-            <div className="hidden md:flex items-center space-x-6">
-              <Link href="/archives" className={`font-medium hover:text-pfebrand transition-colors ${isScrolled ? 'text-gray-700' : 'text-white'}`}>Archives</Link>
-              <Link href="/departments" className={`font-medium hover:text-pfebrand transition-colors ${isScrolled ? 'text-gray-700' : 'text-white'}`}>Departments</Link>
       
-              
-              {isLoggedIn ? (
-                <>
-                  <Link href="/submit-project" className={`font-medium hover:text-pfebrand transition-colors ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
-                    <div className="flex items-center">
-                      <svg 
-                        className="w-5 h-5 mr-1" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24" 
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                      </svg>
-                      Submit Report
-                    </div>
-                  </Link>
-                  <div className="relative ml-3">
-                    <div>
-                      <button
-                        type="button"
-                        className="flex items-center max-w-xs rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pfebrand"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                      >
-                        <div className={`h-8 w-8 rounded-full bg-pfebrand flex items-center justify-center ${isScrolled ? 'text-white' : 'text-white'}`}>
-                          {user?.name.charAt(0).toUpperCase()}
-                        </div>
-                        <span className={`ml-2 ${isScrolled ? 'text-gray-700' : 'text-white'}`}>{user?.name}</span>
-                        <svg className={`ml-1 h-5 w-5 ${isScrolled ? 'text-gray-500' : 'text-white'}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                        </svg>
-                      </button>
-                    </div>
-                    
-                    {isMenuOpen && (
-                      <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                        <div className="py-1">
-                          <Link href="/reports/search" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</Link>
-                          <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</Link>
-                          <Link href="/favorites" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Saved Reports</Link>
-                          <button 
-                            onClick={handleLogout}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Sign out
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <Link href="/login">
-                    <button className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                      isScrolled 
-                        ? 'text-pfebrand border border-pfebrand hover:bg-pfebrand hover:text-white' 
-                        : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
-                    }`}>
-                      Sign In
-                    </button>
-                  </Link>
-                  <Link href="/signup">
-                    <button className="px-4 py-2 bg-pfebrand text-white rounded-md font-medium hover:bg-pfebrand/90 transition-colors shadow">
-                      Sign Up
-                    </button>
-                  </Link>
-                </div>
-              )}
-            </div>
-            
-            {/* Mobile menu button */}
-            <div className="flex items-center md:hidden">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pfebrand"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6 ${isScrolled ? 'text-gray-700' : 'text-white'}`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <svg
-                  className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6 ${isScrolled ? 'text-gray-700' : 'text-white'}`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Mobile menu */}
-        <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden ${isScrolled ? 'bg-white' : 'bg-gray-900/95'}`}>
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link href="/archives" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>Archives</Link>
-            <Link href="/departments" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>Departments</Link>
-            <Link href="/about" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>About</Link>
-            
-            {isLoggedIn ? (
-              <>
-                <Link href="/upload" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>
-                  <div className="flex items-center">
-                    <svg 
-                      className="w-5 h-5 mr-1" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24" 
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Submit Report
-                  </div>
-                </Link>
-                <div className={`px-3 py-2 font-medium ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
-                  <div className="flex items-center">
-                    <div className="h-8 w-8 rounded-full bg-pfebrand flex items-center justify-center text-white">
-                      {user?.name.charAt(0).toUpperCase()}
-                    </div>
-                    <span className="ml-3">{user?.name}</span>
-                  </div>
-                </div>
-                <Link href="/dashboard" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>Dashboard</Link>
-                <Link href="/profile" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>Your Profile</Link>
-                <Link href="/favorites" className={`block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-gray-800'}`}>Saved Reports</Link>
-                <button 
-                  onClick={handleLogout}
-                  className={`w-full text-left block px-3 py-2 rounded-md font-medium ${isScrolled ? 'text-red-600 hover:bg-gray-100' : 'text-red-400 hover:bg-gray-800'}`}
-                >
-                  Sign out
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col space-y-2 px-3 py-2">
-                <Link href="/login">
-                  <button className="w-full px-4 py-2 border border-pfebrand text-pfebrand rounded-md font-medium hover:bg-pfebrand hover:text-white transition-colors">
-                    Sign In
-                  </button>
-                </Link>
-                <Link href="/signup">
-                  <button className="w-full px-4 py-2 bg-pfebrand text-white rounded-md font-medium hover:bg-pfebrand/90 transition-colors">
-                    Sign Up
-                  </button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <div className="relative h-screen">
         {/* Background Image with gradient overlay */}
@@ -258,10 +82,24 @@ export default function Home() {
                 <p className="text-lg mb-8">
                   Continue exploring ENSAM Casablanca&apos;s research projects and academic excellence.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="/dashboard">
-                    <button className="px-8 py-4 bg-pfebrand text-white font-medium rounded-md hover:bg-pfebrand/90 transition-all shadow-lg hover:shadow-xl">
-                      Go to Dashboard
+                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                  <Link href="/reports/search">
+                    <button className="px-8 py-4 bg-pfebrand text-white font-medium rounded-md hover:bg-pfebrand/90 transition-all shadow-lg hover:shadow-xl flex items-center justify-center">
+                        <svg
+                        className="w-5 h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                        </svg>
+                        Find Reports
                     </button>
                   </Link>
                   <Link href="/upload">
@@ -359,7 +197,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Resume your research where you left off with quick access to your recently viewed projects.
                 </p>
-                <Link href="/recent-activity" className="text-pfebrand font-medium hover:text-pfebrand/80">
+                <Link href="/reports/search" className="text-pfebrand font-medium hover:text-pfebrand/80">
                   View Recent Activity →
                 </Link>
               </div>
@@ -388,7 +226,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Access your collection of saved projects for reference and inspiration.
                 </p>
-                <Link href="/saved-projects" className="text-pfebrand font-medium hover:text-pfebrand/80">
+                <Link href="/reports/search" className="text-pfebrand font-medium hover:text-pfebrand/80">
                   View Saved Projects →
                 </Link>
               </div>
@@ -417,7 +255,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Discover projects tailored to your interests and academic focus.
                 </p>
-                <Link href="/recommendations" className="text-pfebrand font-medium hover:text-pfebrand/80">
+                <Link href="/reports/search" className="text-pfebrand font-medium hover:text-pfebrand/80">
                   View Recommendations →
                 </Link>
               </div>

@@ -16,9 +16,7 @@ export const searchUsers = async (query: string): Promise<User[]> => {
 };
 
 // Fetch a single user
-export const fetchUser = async (
-  id: number
-): Promise<User> => {
+export const fetchUser = async (id: number): Promise<User> => {
   return (await fetchData<User>(`/users/${id}`, {
     method: "GET",
   })) as User;
@@ -34,7 +32,6 @@ export const updateUser = async (
     body: JSON.stringify(data),
   })) as User;
 };
-
 
 //update user password
 export const updateUserPassword = async (
@@ -55,3 +52,9 @@ export const deleteUser = async (id: number): Promise<boolean> => {
   return true;
 };
 
+// Fetch user Reports
+export const fetchUserReports = async (userId: number): Promise<Report> => {
+  return (await fetchData<Report>(`/users/${userId}/reports`, {
+    method: "GET",
+  })) as Report;
+};

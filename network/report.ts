@@ -1,4 +1,4 @@
-import { Report, CreateReport, UpdateReport } from "@/type/report";
+import { Report, UpdateReport } from "@/type/report";
 import { fetchData } from "./main";
 
 // Fetch all reports

@@ -7,10 +7,7 @@ import {
   logout as logoutApi,
   register,
 } from "../network/auth";
-import {
-  updateUser,
-  updateUserPassword,
-} from "@/network/users";
+import { updateUser, updateUserPassword } from "@/network/users";
 import { signUp } from "../type/auth";
 import { UpdatePassword, UpdateUser, User } from "@/type/users";
 export const useAuth = () => {
@@ -74,8 +71,8 @@ export const useAuth = () => {
   const logout = async () => {
     await logoutApi();
     localStorage.removeItem("authToken");
-    // setIsAuthenticated(false);
-    // setUser(null);
+    setIsAuthenticated(false);
+    setUser(null);
   };
 
   return {

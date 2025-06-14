@@ -1,11 +1,32 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { fetchReport } from "@/network/report";
-import { Report } from "@/type/report";
-import { Tag } from "@/type/tag";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { imageAddress } from "@/config/main";
+import { fetchReport } from "@/network/report";
+import type { Report } from "@/type/report";
+import type { Tag } from "@/type/tag";
+import {
+  AlertCircle,
+  AlertTriangle,
+  ArrowLeft,
+  Calendar,
+  CheckCircle,
+  ChevronRight,
+  Clock,
+  Download,
+  ExternalLink,
+  Eye,
+  FileText,
+  Home,
+  Loader2,
+  Share2,
+  TagIcon,
+  User,
+} from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ReportDetailsPage() {
   const { id } = useParams();
@@ -13,6 +34,7 @@ export default function ReportDetailsPage() {
   const [report, setReport] = useState<Report | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewCount, setViewCount] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -24,9 +46,10 @@ export default function ReportDetailsPage() {
       try {
         const data = await fetchReport(Number(id));
         setReport(data);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch report details");
+        // Simulate view count increment
+        setViewCount(Math.floor(Math.random() * 1000) + 100);
+      } catch (err) {
+        setError((err as Error).message || "Failed to fetch report details");
       } finally {
         setIsLoading(false);
       }
@@ -39,239 +62,382 @@ export default function ReportDetailsPage() {
     router.back();
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: report?.title,
+          text: report?.description,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-blue-600"></div>
-          <p className="mt-4 text-gray-600 font-medium">Loading report data...</p>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 flex items-center justify-center">
+        <Card className="w-full max-w-md mx-4 border-0 shadow-2xl bg-white/80 backdrop-blur-xl">
+          <CardContent className="flex flex-col items-center justify-center py-16 px-8">
+            <div className="relative">
+              <Loader2 className="w-16 h-16 text-blue-600 animate-spin" />
+              <div className="absolute inset-0 w-16 h-16 border-4 border-blue-200 rounded-full animate-pulse" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-2">
+              Loading Report
+            </h3>
+            <p className="text-gray-600 text-center">
+              Please wait while we fetch the report details...
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-6 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full animate-pulse w-3/4" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <div className="bg-white border-l-4 border-red-500 rounded-lg p-8 max-w-2xl w-full shadow-lg">
-          <div className="flex items-center mb-4">
-            <svg className="h-8 w-8 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h2 className="text-xl font-bold text-gray-800">Error Loading Report</h2>
-          </div>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <button
-            onClick={handleBackClick}
-            className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Return to Reports
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!report) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <div className="bg-white border-l-4 border-yellow-400 rounded-lg p-8 max-w-2xl w-full shadow-lg">
-          <div className="flex items-center mb-4">
-            <svg className="h-8 w-8 text-yellow-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <h2 className="text-xl font-bold text-gray-800">Report Not Found</h2>
-          </div>
-          <p className="text-gray-600 mb-6">The requested report could not be found or may have been deleted.</p>
-          <button
-            onClick={handleBackClick}
-            className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Return to Reports
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const formattedDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header area with breadcrumbs */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <nav className="flex" aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2">
-                  <li>
-                    <button
-                      onClick={handleBackClick}
-                      className="text-gray-500 hover:text-gray-700 transition-colors"
-                    >
-                      Reports
-                    </button>
-                  </li>
-                  <li className="flex items-center">
-                    <svg className="flex-shrink-0 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span className="ml-2 font-medium text-gray-800">Report Details</span>
-                  </li>
-                </ol>
-              </nav>
-              <h1 className="mt-3 text-3xl font-bold text-gray-900 tracking-tight">{report.title}</h1>
-            </div>
-            <div className="mt-4 sm:mt-0">
-              <div
-                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  report.validated
-                    ? "bg-green-100 text-green-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
-              >
-                <span className={`mr-1.5 h-2 w-2 rounded-full ${report.validated ? "bg-green-600" : "bg-yellow-500"}`}></span>
-                {report.validated ? "Validated" : "Pending Validation"}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 flex items-center justify-center p-4">
+        <Card className="w-full max-w-2xl border-0 shadow-2xl bg-white/90 backdrop-blur-xl">
+          <CardContent className="p-12">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <AlertCircle className="w-10 h-10 text-red-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Error Loading Report
+              </h2>
+              <p className="text-gray-600 mb-8 leading-relaxed">{error}</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={handleBackClick}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Return to Reports
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => window.location.reload()}
+                >
+                  Try Again
+                </Button>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+  if (!report) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 flex items-center justify-center p-4">
+        <Card className="w-full max-w-2xl border-0 shadow-2xl bg-white/90 backdrop-blur-xl">
+          <CardContent className="p-12">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <AlertTriangle className="w-10 h-10 text-yellow-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Report Not Found
+              </h2>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                The requested report could not be found or may have been
+                deleted.
+              </p>
+              <Button
+                onClick={handleBackClick}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Return to Reports
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-        {/* Main content grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left column - Report Information */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-              <div className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-6">Report Information</h2>
-                
-                {/* Metadata sections */}
-                <div className="space-y-6">
-                  {/* Tags */}
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
-                      <svg className="mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                      </svg>
-                      Tags
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {report.tags && report.tags.length > 0 ? (
-                        report.tags.map((tag: Tag, index: number) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-blue-50 text-blue-700 border border-blue-100 rounded-full text-sm"
-                          >
-                            {tag.name}
-                          </span>
-                        ))
-                      ) : (
-                        <p className="text-gray-500 text-sm italic">No tags available</p>
-                      )}
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+      {/* Enhanced Header */}
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-16 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center space-x-2 text-sm mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push("/")}
+              className="text-gray-600 hover:text-blue-600"
+            >
+              <Home className="w-4 h-4 mr-1" />
+              Home
+            </Button>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push("/reports/search")}
+              className="text-gray-600 hover:text-blue-600"
+            >
+              Reports
+            </Button>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-900 font-medium">Report Details</span>
+          </nav>
+
+          {/* Header Content */}
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-blue-100 rounded-xl">
+                  <FileText className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 leading-tight">
+                    {report.title}
+                  </h1>
+                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <Eye className="w-4 h-4" />
+                      <span>{viewCount} views</span>
                     </div>
-                  </div>
-
-                  {/* Author */}
-                  <div className="pt-5 border-t border-gray-100">
-                    <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
-                      <svg className="mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                      Created by
-                    </h3>
-                    {report.user ? (
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          <span className="text-gray-500 font-medium">
-                            {report.user.name ? report.user.name.charAt(0).toUpperCase() : "U"}
-                          </span>
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">{report.user.name || "Unknown"}</p>
-                          <p className="text-xs text-gray-500">{report.user.email || "No email provided"}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm italic">User information not available</p>
-                    )}
-                  </div>
-
-                  {/* Timestamps */}
-                  <div className="pt-5 border-t border-gray-100">
-                    <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
-                      <svg className="mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                      </svg>
-                      Timestamps
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Created:</span>
-                        <span className="text-gray-900">{formattedDate(report.created_at)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Last updated:</span>
-                        <span className="text-gray-900">{formattedDate(report.updated_at)}</span>
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(report.created_at)}</span>
                     </div>
-                  </div>
-
-                  {/* Report ID */}
-                  <div className="pt-5 border-t border-gray-100">
-                    <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
-                      <svg className="mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
-                      </svg>
-                      Report ID
-                    </h3>
-                    <p className="text-sm font-mono bg-gray-50 py-1 px-2 rounded border border-gray-200">{report.id}</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right column - PDF Viewer */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-              <div className="p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <svg className="mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                  </svg>
-                  Report Document
-                </h2>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              <Badge
+                className={`px-4 py-2 text-sm font-semibold flex items-center gap-2 ${
+                  report.validated
+                    ? "bg-green-100 text-green-800 border-green-200"
+                    : "bg-orange-100 text-orange-800 border-orange-200"
+                }`}
+              >
+                {report.validated ? (
+                  <CheckCircle className="w-4 h-4" />
+                ) : (
+                  <Clock className="w-4 h-4" />
+                )}
+                {report.validated ? "Validated" : "Pending"}
+              </Badge>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShare}
+                className="border-gray-300"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+
+              <Button
+                asChild
+                className="bg-blue-600 hover:bg-blue-700 shadow-lg"
+              >
                 <a
                   href={imageAddress + report.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
                 >
-                  <svg className="mr-1.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
+                  <Download className="w-4 h-4 mr-2" />
                   Download
                 </a>
-              </div>
-              <div className="p-4">
-                <div className="relative h-[700px] w-full border border-gray-200 rounded-lg overflow-hidden bg-gray-100">
-                  <iframe
-                    src={imageAddress + report.url}
-                    className="w-full h-full"
-                    title="Report PDF"
-                  ></iframe>
-                </div>
-              </div>
+              </Button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Sidebar - Report Information */}
+          <div className="xl:col-span-1 space-y-6">
+            {/* Author Information */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <User className="w-5 h-5 text-blue-600" />
+                  Author
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-2">
+                {report.user ? (
+                  <div className="flex items-center gap-4">
+                    <span className="h-12 w-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg overflow-hidden">
+                      {report.user.name
+                        ? report.user.name.charAt(0).toUpperCase()
+                        : "U"}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-gray-900">
+                        {report.user.name || "Unknown"}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {report.user.email || "No email provided"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic">
+                    User information not available
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Tags */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <TagIcon className="w-5 h-5 text-blue-600" />
+                  Tags
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {report.tags && report.tags.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {report.tags.map((tag: Tag, index: number) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 transition-colors px-3 py-1"
+                      >
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic">No tags available</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Report Details */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="text-sm text-gray-600">Report ID</span>
+                    <Badge variant="outline" className="font-mono text-xs">
+                      #{report.id}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="text-sm text-gray-600">Created</span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {formatDate(report.created_at)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-gray-600">Last Updated</span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {formatDate(report.updated_at)}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Description */}
+            {report.description && (
+              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                    Description
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700 leading-relaxed">
+                    {report.description}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Main Content - PDF Viewer */}
+          <div className="xl:col-span-3">
+            <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200/50">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-white rounded-lg shadow-sm">
+                      <FileText className="w-6 h-6 text-blue-600" />
+                    </div>
+                    Report Document
+                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                      <a
+                        href={imageAddress + report.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Open in New Tab
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="relative">
+                  <div className="aspect-[4/5] w-full bg-gray-100 rounded-b-lg overflow-hidden">
+                    <iframe
+                      src={imageAddress + report.url}
+                      className="w-full h-full border-0"
+                      title="Report PDF"
+                      loading="lazy"
+                    />
+                  </div>
+                  {/* Loading overlay for iframe */}
+                  <div className="absolute inset-0 bg-gray-100 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+                    <div className="flex flex-col items-center gap-3">
+                      <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                      <p className="text-gray-600 font-medium">
+                        Loading document...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

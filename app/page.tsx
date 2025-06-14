@@ -11,11 +11,8 @@ export default function Home() {
     email: string;
     role?: string;
   } | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    // Fetch user authentication status from localStorage
     const checkAuthStatus = () => {
       const storedUser = JSON.parse(localStorage.getItem("user") || "null");
       if (storedUser) {
@@ -27,30 +24,13 @@ export default function Home() {
       }
     };
 
-    // Initial check
     checkAuthStatus();
-
-    // Add event listener for storage changes
     window.addEventListener("storage", checkAuthStatus);
-
-    // Add scroll listener for navbar effect
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("storage", checkAuthStatus);
     };
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setUser(null);
-    setIsMenuOpen(false);
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
